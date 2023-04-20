@@ -1,0 +1,31 @@
+---
+title: "Hands-on Exercise 2"
+author: "LIU YAN"
+editor: visual
+---
+
+# Getting Started
+
+## Install and launching R packages
+
+The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. if they are , then they will be lauched into R.
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse) 
+```
+
+## Importing the data
+
+```{r}
+exam_data<-read_csv("data/Exam_data.csv")
+```
+
+## plotting a simple bar chart
+
+```{r}
+#| echo: false
+ggplot(data=exam_data, aes(ENGLISH,MATHS)) +
+  geom_point() +geom_smooth(method=lm,size=0.5)+geom_label(aes(label=ID),hjust=.5,vjust=-.5)+coord_cartesian(xlim=c(0,100),ylim = c(0,100))+ggtitle("English scores versus Maths scores for Primary 3")
+```
