@@ -1,0 +1,79 @@
+---
+title: "Hands-on_Ex03"
+author: "LIU YAN"
+editor: visual
+---
+## Install and launching R packages
+
+The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. if they are , then they will be lauched into R.
+
+```{r}
+pacman::p_load(ggiraph, plotly, 
+               patchwork, DT, tidyverse) 
+```
+
+## Importing the data
+
+```{r}
+exam_data<-read_csv("data/Exam_data.csv")
+```
+3.4.1 Tooltip effect with tooltip aesthetic
+```{r}
+p<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(tooltip=ID),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  scale_y_continuous(NULL,breaks = NULL
+  )
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+  
+```
+3.4.2 Displaying multiple information on tooltip
+```{r}
+exam_data$tooltip<-c(paste0("Name= ",exam_data$ID,"\n Class = ", exam_data$CLASS))
+
+p<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(tooltip=exam_data$tooltip),stackgroups=TRUE, binwidth=1,method="histodot")+scale_y_continuous(NULL,breaks = NULL)
+girafe(
+  ggobj = p,
+  width_svg = 8,
+  height_svg = 8*0.618
+)
+  
+```
+3.4.3 Customizing Tooltip style
+```{r}
+tooltip_css<-"background-color:white;font-style:bold;color:black;"
+p<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(tooltip=ID),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  scale_y_continuous(NULL,breaks = NULL
+  )
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618,
+  options=list(
+    opts_tooltip(
+      css=tooltip_css)
+    )
+  )
+  
+```
+3.4.4 Displaying statistics on tooltip
+```{r}
+
+```

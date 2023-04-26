@@ -113,7 +113,7 @@ p2<-ggplot(data=exam_data,
 ```
 
 ```{r}
-#| echo:false
+
 p3 <- ggplot(data=exam_data, 
              aes(x= MATHS, 
                  y=ENGLISH)) +
@@ -130,40 +130,36 @@ p3 <- ggplot(data=exam_data,
 ## 2.5.2 Combining two ggplot2 graphs
 
 ```{r}
-#| echo:false
-#| warning: false
+
 p1 + p2
 ```
 
 ## 2.5.3 Combining three ggplot2 graphs
 
-```{r, warning=FALSE, message=FALSE}
-#| echo:false
-#| warning: false
-(p1/p2)|p3
+```{r}
+
+(p1 / p2) | p3
+
 ```
 
 ## 2.5.4 Creating a composite figure with tag
 
 ```{r}
-#| echo:false
-#| warning: false
-((p1/p2)|p3)+plot_annotation(tag_level='I')
+((p1 / p2) | p3) + 
+  plot_annotation(tag_levels = 'I')
 ```
 
 ## 2.5.5 Creating figure with insert
 
 ```{r}
-#| echo:false
-#| warning: false
+
 p3+inset_element(p2,left=0.02,bottom=0.7,right=0.5,top=1)
 ```
 
 ## 2.5.6 Creating a composite figure by using patchwork and ggtheme
 
 ```{r}
-#| echo:false
-#| warning: false
+
 patchwork<-(p1/p2)|p3
 patchwork&theme_economist()
 ```
