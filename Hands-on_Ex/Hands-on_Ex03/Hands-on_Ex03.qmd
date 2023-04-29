@@ -17,7 +17,7 @@ pacman::p_load(ggiraph, plotly,
 ```{r}
 exam_data<-read_csv("data/Exam_data.csv")
 ```
-3.4.1 Tooltip effect with tooltip aesthetic
+## 3.4.1 Tooltip effect with tooltip aesthetic
 ```{r}
 p<-ggplot(data=exam_data,
           aes(x=MATHS))+
@@ -35,7 +35,7 @@ girafe(
 )
   
 ```
-3.4.2 Displaying multiple information on tooltip
+## 3.4.2 Displaying multiple information on tooltip
 ```{r}
 exam_data$tooltip<-c(paste0("Name= ",exam_data$ID,"\n Class = ", exam_data$CLASS))
 
@@ -50,7 +50,7 @@ girafe(
 )
   
 ```
-3.4.3 Customizing Tooltip style
+## 3.4.3 Customizing Tooltip style
 ```{r}
 tooltip_css<-"background-color:white;font-style:bold;color:black;"
 p<-ggplot(data=exam_data,
@@ -73,7 +73,7 @@ girafe(
   )
   
 ```
-3.4.4 Displaying statistics on tooltip
+## 3.4.4 Displaying statistics on tooltip
 ```{r}
 tooltip<-function(y,ymax,accuracy=.01){
   mean<-scales::number(y,accuracy=accuracy)
@@ -97,7 +97,7 @@ girafe(ggobj=gg_point,
         )
 
 ```
-3.4.5 Hover effect with data_id aesthetic
+## 3.4.5 Hover effect with data_id aesthetic
 ```{r}
 p<-ggplot(data=exam_data,
           aes(x=MATHS))+
@@ -115,7 +115,7 @@ girafe(
 
 ```
 
-3.4.6 Styling hover effect
+## 3.4.6 Styling hover effect
 ```{r}
 p<-ggplot(data=exam_data,
           aes(x=MATHS))+
@@ -137,7 +137,7 @@ girafe(
                      
     
 ```
-3.4.7 Combining tooltip and hover effect
+## 3.4.7 Combining tooltip and hover effect
 ```{r}
 p<-ggplot(data=exam_data,
           aes(x=MATHS))+
@@ -158,7 +158,7 @@ girafe(
                          ))
                        
 ```
-3.4.8 Click effect with onclick
+## 3.4.8 Click effect with onclick
 ```{r}
 exam_data$onclick <- sprintf("window.open(\"%s%s\")",
 "https://www.moe.gov.sg/schoolfinder?journey=Primary%20school",
@@ -181,7 +181,7 @@ girafe(
   
 
 ```
-3.4.9 Coordinated Multiple Views with ggiraph
+## 3.4.9 Coordinated Multiple Views with ggiraph
 
 ```{r}
 p1<-ggplot(data=exam_data,
@@ -218,15 +218,15 @@ girafe(
   
 
 ```
-3.5 Interactive Data Visualisation - plotly methods!
-3.5.1 Creating an interactive scatter plot: plot_ly() method
+## 3.5 Interactive Data Visualisation - plotly methods!
+## 3.5.1 Creating an interactive scatter plot: plot_ly() method
 ```{r}
 plot_ly(data = exam_data, 
              x = ~MATHS, 
              y = ~ENGLISH)
 ```
 
-3.5.2 Working with visual variable: plot_ly() method
+## 3.5.2 Working with visual variable: plot_ly() method
 ```{r}
 plot_ly(data = exam_data, 
              x = ~MATHS, 
@@ -236,7 +236,7 @@ plot_ly(data = exam_data,
 
 ```
 
-3.5.3 Creating an interactive scatter plot: ggplotly() method
+## 3.5.3 Creating an interactive scatter plot: ggplotly() method
 ```{r}
 p<-ggplot(data=exam_data,
           aes(x=MATHS,y=ENGLISH))+
@@ -245,7 +245,7 @@ p<-ggplot(data=exam_data,
 ggplotly(p)
 
 ```
-3.5.4 Coordinated Multiple Views with plotly
+## 3.5.4 Coordinated Multiple Views with plotly
 
 ```{r}
 d<-highlight_key(exam_data)
@@ -265,12 +265,12 @@ subplot(
 )
 
 ```
-3.6 Interactive Data Visualisation - crosstalk methods!
-3.6.1 Interactive Data Table: DT package
+## 3.6 Interactive Data Visualisation - crosstalk methods!
+## 3.6.1 Interactive Data Table: DT package
 ```{r}
 DT::datatable(exam_data, class= "compact")
 ```
-3.6.2 Linked brushing: crosstalk method
+## 3.6.2 Linked brushing: crosstalk method
 ```{r}
 d<-highlight_key(exam_data)
 p1<-ggplot(data=d,

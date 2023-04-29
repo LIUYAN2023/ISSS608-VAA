@@ -21,7 +21,7 @@ globalPop<-read_xls("data/GlobalPopulation.xls",sheet="Data")%>%
 mutate_each_(funs(factor(.)), col) %>%
 mutate(Year = as.integer(Year))
 ```
-4.3 Building a static population bubble plot
+## 4.3 Building a static population bubble plot
 ```{r}
 #| warning: false
 ggplot(globalPop, aes(x = Old, y = Young, 
@@ -35,7 +35,7 @@ ggplot(globalPop, aes(x = Old, y = Young,
        x = '% Aged', 
        y = '% Young') 
 ```
-4.3.2 Building the animated bubble plot
+## 4.3.2 Building the animated bubble plot
 ```{r}
 #| warning: false
 ggplot(globalPop, aes(x = Old, y = Young, 
@@ -51,13 +51,13 @@ ggplot(globalPop, aes(x = Old, y = Young,
   transition_time(Year)+
   ease_aes('linear')
 ```
-4.4 Animated Data Visualisation: plotly
-4.4.1 Building an animated bubble plot: ggplotly() method
+## 4.4 Animated Data Visualisation: plotly
+## 4.4.1 Building an animated bubble plot: ggplotly() method
 ```{r}
 
 
 ```
-4.4.2 Building an animated bubble plot: plot_ly() method
+## 4.4.2 Building an animated bubble plot: plot_ly() method
 ```{r}
 #| warning: false
 bp <- globalPop %>%
