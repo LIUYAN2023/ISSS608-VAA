@@ -139,5 +139,148 @@ girafe(
 ```
 3.4.7 Combining tooltip and hover effect
 ```{r}
+p<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(tooltip=CLASS,
+        data_id=CLASS),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  scale_y_continuous(NULL,breaks=NULL)
+girafe(
+  ggobj=p,
+  width_svg = 6,
+  height_svg = 6*0.618,
+  options=list(
+    opts_hover(css="fill:#202020;"),
+    opts_hover_inv(css="opacity:0.2;")
+                         ))
+                       
+```
+3.4.8 Click effect with onclick
+```{r}
+exam_data$onclick <- sprintf("window.open(\"%s%s\")",
+"https://www.moe.gov.sg/schoolfinder?journey=Primary%20school",
+as.character(exam_data$ID))
+
+p<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(onclick=onclick),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  scale_y_continuous(NULL,breaks = NULL
+  )
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+  
 
 ```
+3.4.9 Coordinated Multiple Views with ggiraph
+
+```{r}
+p1<-ggplot(data=exam_data,
+          aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(data_id=ID),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  coord_cartesian(xlim=c(0,100))+
+  scale_y_continuous(NULL,breaks = NULL
+  )
+
+p2<-ggplot(data=exam_data,
+          aes(x=ENGLISH))+
+  geom_dotplot_interactive(
+    aes(data_id=ID),
+    stackgroups=TRUE,
+    binwidth=1,
+    method="histodot")+
+  coord_cartesian(xlim=c(0,100))+
+  scale_y_continuous(NULL,breaks = NULL
+  )
+
+girafe(
+  code=print(p1+p2),
+  width_svg = 6,
+  height_svg = 3,
+  options=list(
+    opts_hover(css="fill:#202020;"),
+    opts_hover_inv(css="opacity:0.2;")
+  )
+)
+  
+
+```
+3.5 Interactive Data Visualisation - plotly methods!
+3.5.1 Creating an interactive scatter plot: plot_ly() method
+```{r}
+plot_ly(data = exam_data, 
+             x = ~MATHS, 
+             y = ~ENGLISH)
+```
+
+3.5.2 Working with visual variable: plot_ly() method
+```{r}
+plot_ly(data = exam_data, 
+             x = ~MATHS, 
+             y = ~ENGLISH,
+             color=~RACE
+        )
+
+```
+
+3.5.3 Creating an interactive scatter plot: ggplotly() method
+```{r}
+p<-ggplot(data=exam_data,
+          aes(x=MATHS,y=ENGLISH))+
+  geom_point(size=1)+
+    coord_cartesian(xlim=c(0,100),ylim=c(0,100))
+ggplotly(p)
+
+```
+3.5.4 Coordinated Multiple Views with plotly
+
+```{r}
+d<-highlight_key(exam_data)
+p1<-ggplot(data=d,
+          aes(x=MATHS,y=ENGLISH))+
+  geom_point(size=1)+
+    coord_cartesian(xlim=c(0,100),ylim=c(0,100))
+
+p2<-ggplot(data=d,
+          aes(x=MATHS,y=SCIENCE))+
+  geom_point(size=1)+
+    coord_cartesian(xlim=c(0,100),ylim=c(0,100))
+
+subplot(
+  ggplotly(p1),
+  ggplotly(p2)
+)
+
+```
+3.6 Interactive Data Visualisation - crosstalk methods!
+3.6.1 Interactive Data Table: DT package
+```{r}
+DT::datatable(exam_data, class= "compact")
+```
+3.6.2 Linked brushing: crosstalk method
+```{r}
+d<-highlight_key(exam_data)
+p1<-ggplot(data=d,
+          aes(ENGLISH,MATHS))+
+  geom_point(size=1)+
+    coord_cartesian(xlim=c(0,100),ylim=c(0,100))
+
+gg<-highlight(ggplotly(p),"plotly_selected")
+
+crosstalk::bscols(gg, DT::datatable(d), widths= 5 )
+
+```
+
