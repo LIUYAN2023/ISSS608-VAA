@@ -4,6 +4,10 @@ project:
 website:
   title: "ISSS608-VAA"
   navbar:
+    logo: "images/visual-analytics-icon.png"
+    pinned: true
+    align: left
+    max-height: 100px
     left: 
     - text: "Hands-on Exercise"
       menu: 
@@ -28,9 +32,12 @@ website:
 
 format:
   html:
-    theme: morph
+    theme: flatly
     css: styles.css
     toc: true
-
+execute: 
+  echo: true
+  eval: true
+  warning: false
 editor: visual
 

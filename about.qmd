@@ -2,8 +2,18 @@
 title: "About"
 ---
 
-About this site
+This website consists of a collection of works done for the **ISSS608-Visual Analytics and Applications** course I took in my MITB journey. And the visualization work is done with Tableau, R packages and Shiny app.
 
-```{r}
-1 + 1
-```
+There are three types of exercise:
+
+-   **Hands-on Exercise**
+
+Trying out new visualization skills and technique before coming to class based on reading material provided from the textbook, documents and articles on business applications of Visual Analytics.
+
+-   **In-Class Exercise**
+
+In-class exercise is mainly on Tableau or R visualization works practice during class and guided by Prof. Kam Tin Seong.
+
+-   **Take-home Exercise**
+
+Take-home exercise focuses using innovative and creative in applying appropriate R packages to design enlightening and yet functional data visualization for analytics purposes.
