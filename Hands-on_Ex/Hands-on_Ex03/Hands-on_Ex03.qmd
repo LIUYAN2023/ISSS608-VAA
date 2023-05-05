@@ -504,7 +504,6 @@ In Plotly R package, both **ggplotly()** and **plot_ly()** support key frame ani
 In this sub-section, you will learn how to create an animated bubble plot by using **ggplotly()** method.
 
 ```{r}
-
 ```
 
 -   Appropriate ggplot2 functions are used to create a static bubble plot. The output is then saved as an R object called gg.
