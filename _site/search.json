@@ -1,5 +1,292 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "There are three types of exercise:\n\nHands-on Exercise\n\nTrying out new visualization skills and technique before coming to class based on reading material provided from the textbook, documents and articles on business applications of Visual Analytics.\n\nIn-Class Exercise\n\nIn-class exercise is mainly on Tableau or R visualization works practice during class and guided by Prof. Kam Tin Seong.\n\nTake-home Exercise\n\nTake-home exercise focuses using innovative and creative in applying appropriate R packages to design enlightening and yet functional data visualization for analytics purposes."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html",
+    "title": "Hands-on Exercise 1",
+    "section": "",
+    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. if they are , then they will be lauched into R.\n- tidyverse: an opinionated collection of R packages designed for data science.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data<-read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#grammar-of-graphics",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#grammar-of-graphics",
+    "title": "Hands-on Exercise 1",
+    "section": "2.1 Grammar of Graphics",
+    "text": "2.1 Grammar of Graphics\nggplot2 is an implementation of Leland Wilkinson’s Grammar of Graphics. Figure below shows the seven grammars of ggplot2.\n\nA short description of each building block are as follows:\n\nData: The dataset being plotted.\nAesthetics take attributes of the data and use them to influence visual characteristics, such as position, colours, size, shape, or transparency.\nGeometrics: The visual elements used for our data, such as point, bar or line.\nFacets split the data into subsets to create multiple variations of the same graph (paneling, multiple plots).\nStatistics, statiscal transformations that summarise data (e.g. mean, confidence intervals). Coordinate systems define the plane on which data are mapped on the graphic.\nThemes modify all non-data components of a plot, such as main title, sub-title, y-aixs title, or legend background."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-data",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-data",
+    "title": "Hands-on Exercise 1",
+    "section": "2.2 Essential Grammatical Elements in ggplot2: data",
+    "text": "2.2 Essential Grammatical Elements in ggplot2: data\nLet us call the ggplot() function using the code chunk on the right.\n\nggplot(data=exam_data)\n\n\n\n\n\nA blank canvas appears.\nggplot() initializes a ggplot object.\nThe data argument defines the dataset to be used for plotting.\nIf the dataset is not already a data.frame, it will be converted to one by fortify()."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-aesthetic-mappings",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-aesthetic-mappings",
+    "title": "Hands-on Exercise 1",
+    "section": "2.3 Essential Grammatical Elements in ggplot2: Aesthetic mappings",
+    "text": "2.3 Essential Grammatical Elements in ggplot2: Aesthetic mappings\nThe aesthetic mappings take attributes of the data and and use them to influence visual characteristics, such as position, colour, size, shape, or transparency. Each visual characteristic can thus encode an aspect of the data and be used to convey information.\nAll aesthetics of a plot are specified in the aes() function call (in later part of this lesson, you will see that each geom layer can have its own aes specification)\nCode chunk below adds the aesthetic element into the plot.\n\nggplot(data=exam_data, \n       aes(x= MATHS))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-geom",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-geom",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4 Essential Grammatical Elements in ggplot2: geom",
+    "text": "2.4 Essential Grammatical Elements in ggplot2: geom\nGeometric objects are the actual marks we put on a plot. Examples include:\n\ngeom_point for drawing individual points (e.g., a scatter plot)\ngeom_line for drawing lines (e.g., for a line charts)\ngeom_smooth for drawing smoothed lines (e.g., for simple trends or approximations)\ngeom_bar for drawing bars (e.g., for bar charts)\ngeom_histogram for drawing binned values (e.g. a histogram)\ngeom_polygon for drawing arbitrary shapes\ngeom_map for drawing polygons in the shape of a map! (You can access the data to use for these maps by using the map_data() function).\n\nA plot must have at least one geom; there is no upper limit. You can add a geom to a plot using the + operator.\nFor complete list, please refer to here."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_bar",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_bar",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.1 Geometric Objects: geom_bar",
+    "text": "2.4.1 Geometric Objects: geom_bar\nThe code chunk below plots a bar chart by using geom_bar().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_dotplot",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_dotplot",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.2 Geometric Objects: geom_dotplot",
+    "text": "2.4.2 Geometric Objects: geom_dotplot\nIn a dot plot, the width of a dot corresponds to the bin width (or maximum width, depending on the binning algorithm), and dots are stacked, with each dot representing one observation.\nIn the code chunk below, geom_dotplot() of ggplot2 is used to plot a dot plot.\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(dotsize = 0.5)\n\n\n\n\nThe code chunk below performs the following two steps:\n\nscale_y_continuous() is used to turn off the y-axis.\nbinwidth argument is used to change the binwidth to 2.5.\n\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot(binwidth=2.5,         \n               dotsize = 0.5) +      \n  scale_y_continuous(NULL,           \n                     breaks = NULL)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_histogram",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_histogram",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.3 Geometric Objects: geom_histogram()",
+    "text": "2.4.3 Geometric Objects: geom_histogram()\nIn the code chunk below, geom_histogram() is used to create a simple histogram by using values in MATHS field of exam_data.\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_histogram()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#modifying-a-geometric-object-by-changing-geom",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#modifying-a-geometric-object-by-changing-geom",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.4 Modifying a geometric object by changing geom()",
+    "text": "2.4.4 Modifying a geometric object by changing geom()\nIn the code chunk below,\n\nbins argument is used to change the number of bins to 20.\nfill argument is used to shade the histogram with light blue color.\ncolor argument is used to change the outline colour of the bars in black.\n\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,            \n                 color=\"black\",      \n                 fill=\"light blue\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#modifying-a-geometric-object-by-changing-aes",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#modifying-a-geometric-object-by-changing-aes",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.5 Modifying a geometric object by changing aes()",
+    "text": "2.4.5 Modifying a geometric object by changing aes()\nThe code chunk below changes the interior colour of the histogram (i.e. fill) by using sub-group of aesthetic().\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           fill = GENDER)) +\n  geom_histogram(bins=20, \n                 color=\"grey30\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom-density",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom-density",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.6 Geometric Objects: geom-density()",
+    "text": "2.4.6 Geometric Objects: geom-density()\ngeom-density() computes and plots kernel density estimate, which is a smoothed version of the histogram.\nIt is a useful alternative to the histogram for continuous data that comes from an underlying smooth distribution.\nThe code below plots the distribution of Maths scores in a kernel density estimate plot.\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_density()           \n\n\n\n\nThe code chunk below plots two kernel density lines by using colour or fill arguments of aes()\n\nggplot(data=exam_data, \n       aes(x = MATHS, \n           colour = GENDER)) +\n  geom_density()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_boxplot",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_boxplot",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.7 Geometric Objects: geom_boxplot",
+    "text": "2.4.7 Geometric Objects: geom_boxplot\ngeom_boxplot() displays continuous value list. It visualises five summary statistics (the median, two hinges and two whiskers), and all “outlying” points individually.\nThe code chunk below plots boxplots by using geom_boxplot().\n\nggplot(data=exam_data, \n       aes(y = MATHS,       \n           x= GENDER)) +    \n  geom_boxplot()            \n\n\n\n\nNotches are used in box plots to help visually assess whether the medians of distributions differ. If the notches do not overlap, this is evidence that the medians are different.\nThe code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(notch=TRUE)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_violin",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_violin",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.8 Geometric Objects: geom_violin",
+    "text": "2.4.8 Geometric Objects: geom_violin\ngeom_violin is designed for creating violin plot. Violin plots are a way of comparing multiple data distributions. With ordinary density curves, it is difficult to compare more than just a few distributions because the lines visually interfere with each other. With a violin plot, it’s easier to compare several distributions since they’re placed side by side.\nThe code below plot the distribution of Maths score by gender in violin plot.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_violin()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_point",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geometric-objects-geom_point",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.9 Geometric Objects: geom_point()",
+    "text": "2.4.9 Geometric Objects: geom_point()\ngeom_point() is especially useful for creating scatterplot.\nThe code chunk below plots a scatterplot showing the Maths and English grades of pupils by using geom_point().\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geom-objects-can-be-combined",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#geom-objects-can-be-combined",
+    "title": "Hands-on Exercise 1",
+    "section": "2.4.10 geom objects can be combined",
+    "text": "2.4.10 geom objects can be combined\nThe code chunk below plots the data points on the boxplots by using both geom_boxplot() and geom_point().\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot() +                    \n  geom_point(position=\"jitter\", \n             size = 0.5)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-stat",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-stat",
+    "title": "Hands-on Exercise 1",
+    "section": "2.5 Essential Grammatical Elements in ggplot2: stat",
+    "text": "2.5 Essential Grammatical Elements in ggplot2: stat\nThe Statistics functions statistically transform data, usually as some form of summary. For example:\n\nfrequency of values of a variable (bar graph)\na mean\na confidence limit\nThere are two ways to use these functions:\nadd a stat_() function and override the default geom\nadd a geom_() function and override the default stat"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat",
+    "title": "Hands-on Exercise 1",
+    "section": "2.5.1 Working with stat()",
+    "text": "2.5.1 Working with stat()\nThe boxplots below are incomplete because the positions of the means were not shown.\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat---the-stat_summary-method",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat---the-stat_summary-method",
+    "title": "Hands-on Exercise 1",
+    "section": "2.5.2 Working with stat - the stat_summary() method",
+    "text": "2.5.2 Working with stat - the stat_summary() method\nThe code chunk below adds mean values by using stat_summary() function and overriding the default geom.\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  stat_summary(geom = \"point\",       \n               fun.y=\"mean\",         \n               colour =\"red\",        \n               size=4)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat---the-geom-method",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-stat---the-geom-method",
+    "title": "Hands-on Exercise 1",
+    "section": "2.5.3 Working with stat - the geom() method",
+    "text": "2.5.3 Working with stat - the geom() method\nThe code chunk below adding mean values by using geom_() function and overriding the default stat.\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  geom_point(stat=\"summary\",        \n             fun.y=\"mean\",           \n             colour =\"red\",          \n             size=4)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#adding-a-best-fit-curve-on-a-scatterplot",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#adding-a-best-fit-curve-on-a-scatterplot",
+    "title": "Hands-on Exercise 1",
+    "section": "2.5.4 Adding a best fit curve on a scatterplot",
+    "text": "2.5.4 Adding a best fit curve on a scatterplot\nThe scatterplot below shows the relationship of Maths and English grades of pupils. The interpretability of this graph can be improved by adding a best fit curve.\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(size=0.5)\n\n\n\n\nIn the code chunk below, geom_smooth() is used to plot a best fit curve on the scatterplot.\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-facets",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-facets",
+    "title": "Hands-on Exercise 1",
+    "section": "2.6 Essential Grammatical Elements in ggplot2: Facets",
+    "text": "2.6 Essential Grammatical Elements in ggplot2: Facets\nFacetting generates small multiples (sometimes also called trellis plot), each displaying a different subset of the data. They are an alternative to aesthetics for displaying additional discrete variables. ggplot2 supports two types of factes, namely: facet_grid() and facet_wrap."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-facet_wrap",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-facet_wrap",
+    "title": "Hands-on Exercise 1",
+    "section": "2.6.1 Working with facet_wrap()",
+    "text": "2.6.1 Working with facet_wrap()\nfacet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use of screen space than facet_grid because most displays are roughly rectangular.\nThe code chunk below plots a trellis plot using facet-wrap().\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20) +\n    facet_wrap(~ CLASS)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-facets-1",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-facets-1",
+    "title": "Hands-on Exercise 1",
+    "section": "2.6.2 Essential Grammatical Elements in ggplot2: Facets",
+    "text": "2.6.2 Essential Grammatical Elements in ggplot2: Facets\nfacet_grid() forms a matrix of panels defined by row and column facetting variables. It is most useful when you have two discrete variables, and all combinations of the variables exist in the data.\nThe code chunk below plots a trellis plot using facet_grid().\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20) +\n    facet_grid(~ CLASS)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-coordinates",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-coordinates",
+    "title": "Hands-on Exercise 1",
+    "section": "2.7 Essential Grammatical Elements in ggplot2: Coordinates",
+    "text": "2.7 Essential Grammatical Elements in ggplot2: Coordinates\nThe Coordinates functions map the position of objects onto the plane of the plot. There are a number of different possible coordinate systems to use, they are:\n\ncoord_cartesian()\ncoord_flip()\ncoord_fixed()\ncoord_quickmap()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-coordinate",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#working-with-coordinate",
+    "title": "Hands-on Exercise 1",
+    "section": "2.7.1 Working with Coordinate",
+    "text": "2.7.1 Working with Coordinate\nBy the default, the bar chart of ggplot2 is in vertical form.\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar()\n\n\n\n\nThe code chunk below flips the horizontal bar chart into vertical bar chart by using coord_flip().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#changing-the-y--and-x-axis-range",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#changing-the-y--and-x-axis-range",
+    "title": "Hands-on Exercise 1",
+    "section": "2.7.2 Changing the y- and x-axis range",
+    "text": "2.7.2 Changing the y- and x-axis range\nThe scatterplot on the right is slightly misleading because the y-aixs and x-axis range are not equal.\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, size=0.5)\n\n\n\n\nThe code chunk below fixed both the y-axis and x-axis range from 0-100.\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-themes",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_EX01.html#essential-grammatical-elements-in-ggplot2-themes",
+    "title": "Hands-on Exercise 1",
+    "section": "2.8 Essential Grammatical Elements in ggplot2: themes",
+    "text": "2.8 Essential Grammatical Elements in ggplot2: themes\nThemes control elements of the graph not related to the data. For example:\n\nbackground colour\nsize of fonts\ngridlines\ncolour of labels\n\nBuilt-in themes include:\n\ntheme_gray() (default)\ntheme_bw()\ntheme_classic()\n\nA list of theme can be found at this link. Each theme element can be conceived of as either a line (e.g. x-axis), a rectangle (e.g. graph background), or text (e.g. axis title).\nThe code chunk below plot a horizontal bar chart using theme_gray().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()\n\n\n\n\nA horizontal bar chart plotted using theme_classic().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()\n\n\n\n\nA horizontal bar chart plotted using theme_minimal().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "title": "Hands-on Exercise 2",
+    "section": "",
+    "text": "The code chunk below uses p_load() of pacman package to check if packages are installed in the computer. If they are, then they will be launched into R. The R packages installed are:\n\nggrepel:an R package provides geoms for ggplot2 to repel overlapping text labels.\npatchwork: an R package for preparing composite figure created using ggplot2.\nggthemes:an R package provides some extra themes, geoms, and scales for ‘ggplot2’.\nhrbrthemes:an R package provides typography-centric themes and theme components for ggplot2.\ntidyverse: an opinionated collection of R packages designed for data science.\n\n\npacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse) \n\n\n\n\n\nexam_data<-read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-ggplot2-annotation-ggrepel",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-ggplot2-annotation-ggrepel",
+    "title": "Hands-on Exercise 2",
+    "section": "2.1.1 Beyond ggplot2 Annotation: ggrepel",
+    "text": "2.1.1 Beyond ggplot2 Annotation: ggrepel\n\nggplot(data=exam_data, aes(ENGLISH,MATHS)) +\n  geom_point() +geom_smooth(method=lm,size=0.5)+geom_label(aes(label=ID),hjust=.5,vjust=-.5)+coord_cartesian(xlim=c(0,100),ylim = c(0,100))+ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
+    "title": "Hands-on Exercise 2",
+    "section": "2.1.2 Working with ggrepel",
+    "text": "2.1.2 Working with ggrepel\nggrepel is an extension of ggplot2 package which provides geoms for ggplot2 to repel overlapping text. We simply replace geom_text() by geom_text_repel() and geom_label()by geom_label_repel.\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  geom_label_repel(aes(label = ID), \n                   fontface = \"bold\") +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-ggplot2-themes",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-ggplot2-themes",
+    "title": "Hands-on Exercise 2",
+    "section": "2.2.1 Beyond ggplot2 Themes",
+    "text": "2.2.1 Beyond ggplot2 Themes\nggplot2 comes with eight built-in themes, they are: theme_gray(), theme_bw(), theme_classic(), theme_dark(), theme_light(), theme_linedraw(), theme_minimal(), and theme_void().\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  theme_gray()+\n  ggtitle(\"Distribution of Maths scores\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "title": "Hands-on Exercise 2",
+    "section": "2.2.2 Working with ggtheme Package",
+    "text": "2.2.2 Working with ggtheme Package\nggthemes provides ‘ggplot2’ themes that replicate the look of plots by Edward Tufte, Stephen Few, Fivethirtyeight, The Economist, ‘Stata’, ‘Excel’, and The Wall Street Journal, among others.\nIn the example below, The Economist theme is used.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  theme_economist()+\n  ggtitle(\"Distribution of Maths scores\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "title": "Hands-on Exercise 2",
+    "section": "2.2.3 Working with hrbthems Package",
+    "text": "2.2.3 Working with hrbthems Package\nhrbrthemes package provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum()\n\n\n\n\nThe second goal centers around productivity for a production workflow. In fact, this “production workflow” is the context for where the elements of hrbrthemes should be used.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\")+\n  theme_ipsum(axis_title_size = 18,base_size = 15,grid=\"Y\")\n\n\n\n\naxis_title_size’ argument is used to increase the font size of the axis title to 18.\nbase_size argument is used to increase the default axis label to 15.\ngrid argument argument is used to remove the x-axis grid lines."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-single-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#beyond-single-graph",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.1 Beyond Single Graph",
+    "text": "2.3.1 Beyond Single Graph\nIt is not unusual that multiple graphs are required to tell a compelling visual story. There are several ggplot2 extensions provide functions to compose figure with multiple graphs. This section will introduce how to create composite plot by combining multiple graphs.\nFirst, let us create three statistical graphics by using the code chunk below.\n\np1<-ggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of Maths scores\")\n\n\np2<-ggplot(data=exam_data, \n       aes(x= ENGLISH)) +\n  geom_histogram(bins = 20,boundary=100,color=\"grey25\",fill=\"grey90\") +\n  coord_cartesian(xlim=c(0,100))+\n  ggtitle(\"Distribution of English scores\")\n\n\np3 <- ggplot(data=exam_data, \n             aes(x= MATHS, \n                 y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.2 Creating Composite Graphics: pathwork methods",
+    "text": "2.3.2 Creating Composite Graphics: pathwork methods\nThis section will share an ggplot2 extension called patchwork which is specially designed for combining separate ggplot2 graphs into a single figure.\nPatchwork package has a very simple syntax where we can create layouts super easily. Here’s the general syntax that combines:\n\nTwo-Column Layout using the Plus Sign +.\nParenthesis () to create a subplot group.\nTwo-Row Layout using the Division Sign /"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.3 Combining two ggplot2 graphs",
+    "text": "2.3.3 Combining two ggplot2 graphs\nFigure in the tabset below shows a composite of two histograms created using patchwork.\n\np1 + p2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.4 Combining Three ggplot2 Graphs",
+    "text": "2.3.4 Combining Three ggplot2 Graphs\nWe can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:\n\n“|” operator to stack two ggplot2 graphs\n“/” operator to place the plots beside each other\n“()” operator the define the sequence of the plotting\n\n\n(p1 / p2) | p3\n\n\n\n\nTo learn more about, refer to Plot Assembly."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.5 Creating a Composite Figure with Tag",
+    "text": "2.3.5 Creating a Composite Figure with Tag\nIn order to identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below.\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.6 Creating Figure with Insert",
+    "text": "2.3.6 Creating Figure with Insert\nBeside providing functions to place plots next to each other based on the provided layout. With inset_element() of patchwork, we can place one or several plots or graphic elements freely on top or below another plot.\n\np3+inset_element(p2,left=0.02,bottom=0.7,right=0.5,top=1)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
+    "title": "Hands-on Exercise 2",
+    "section": "2.3.7 Creating a Composite Figure by Using patchwork and ggtheme",
+    "text": "2.3.7 Creating a Composite Figure by Using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\npatchwork<-(p1/p2)|p3\npatchwork&theme_economist()"
+  },
+  {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
     "title": "Hands-on_Ex03",
@@ -182,11 +469,18 @@
     "text": "3.3.2 Building an animated bubble plot: plot_ly() method\nIn this sub-section, you will learn how to create an animated bubble plot by using plot_ly() method.\n\nbp <- globalPop %>%\n  plot_ly(x = ~Old, \n          y = ~Young, \n          size = ~Population, \n          color = ~Continent, \n          frame = ~Year, \n          text = ~Country, \n          hoverinfo = \"text\",\n          type = 'scatter',\n          mode = 'markers'\n          )\nbp"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#getting-started",
     "title": "Hands-on_Ex04",
-    "section": "",
-    "text": "ggstatsplot is an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\n\nTo provide alternative statistical inference methods by default.\nTo follow best practices for statistical reporting.For all statistical tests reported in the plots, the default template abides by the APA gold standard for statistical reporting. For example, here are results from a robust t-test:\n\n\n\n\n\n\nThe code chunk below uses p_load() of pacman package to check if packages are installed in the computer. If they are, then they will be launched into R. The R packages installed are:\nggstatsplot:create graphics with details from statistical tests included in the information-rich plots themselves.\ntidyverse:a family of modern R packages specially designed to support data science, analysis and communication task including creating static statistical graphs.\n\npacman::p_load(ggstatsplot, tidyverse) \n\n\n\n\n\nexam_data<-read_csv(\"data/Exam_data.csv\")\n\n\n\n\n\n\n\nIn the code chunk below, gghistostats() is used to to build an visual of one-sample test on English scores.\n\nset.seed(1234)\n\ngghistostats(\n  data = exam_data,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\nDefault information: - statistical details - Bayes Factor - sample sizes - distribution summary\n\n\n\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nThat’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\nWhen we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10. It can be defined mathematically as\n\nThe Schwarz criterion is one of the easiest ways to calculate rough approximation of the Bayes Factor.\n\n\n\n\nA Bayes Factor can be any positive number. One of the most common interpretations is this one—first proposed by Harold Jeffereys (1961) and slightly modified by Lee and Wagenmakers in 2013:\n\n\n\n\nIn the code chunk below, ggbetweenstats() is used to build a visual for two-sample mean test of Maths scores by gender.\n\nggbetweenstats(\n  data = exam_data,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\nDefault information: - statistical details - Bayes Factor - sample sizes - distribution summary\n\n\n\nIn the code chunk below, ggbetweenstats() is used to build a visual for One-way ANOVA test on English score by race.\n\nggbetweenstats(\n  data = exam_data,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n“ns” → only non-significant\n“s” → only significant\n“all” → everything\n\nggbetweenstats - Summary of tests\n\n\n\n\n\n\nIn the code chunk below, ggscatterstats() is used to build a visual for Significant Test of Correlation between Maths scores and English scores.\n\nggscatterstats(\n  data = exam_data,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n\nIn the code chunk below, the Maths scores is binned into a 4-class variable by using cut().\n\nexam1 <- exam_data %>% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\nIn this code chunk below ggbarstats() is used to build a visual for Significant Test of Association\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)"
+    "section": "1.1 Getting Started",
+    "text": "1.1 Getting Started\n\nInstall and launching R Packages\nThe code chunk below uses p_load() of pacman package to check if packages are installed in the computer. If they are, then they will be launched into R. The R packages installed are:\nggstatsplot:create graphics with details from statistical tests included in the information-rich plots themselves.\ntidyverse:a family of modern R packages specially designed to support data science, analysis and communication task including creating static statistical graphs.\n\npacman::p_load(ggstatsplot, tidyverse) \n\n\n\nImporting the data\n\nexam_data<-read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#exercise",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#exercise",
+    "title": "Hands-on_Ex04",
+    "section": "1.2 Exercise",
+    "text": "1.2 Exercise\n\n1.2.1 One-sample test: gghistostats() method\nIn the code chunk below, gghistostats() is used to to build an visual of one-sample test on English scores.\n\nset.seed(1234)\n\ngghistostats(\n  data = exam_data,\n  x = ENGLISH,\n  type = \"np\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\n\nset.seed(1234)\n\ngghistostats(\n  data = exam_data,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\nDefault information: - statistical details - Bayes Factor - sample sizes - distribution summary\n\n\n1.2.2 Unpacking the Bayes Factor\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nThat’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\nWhen we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10. It can be defined mathematically as\n\nThe Schwarz criterion is one of the easiest ways to calculate rough approximation of the Bayes Factor.\n\n\n\n1.2.3 How to interpret Bayes Factor\nA Bayes Factor can be any positive number. One of the most common interpretations is this one—first proposed by Harold Jeffereys (1961) and slightly modified by Lee and Wagenmakers in 2013:\n\n\n\n1.2.4 Two-sample mean test: ggbetweenstats()\nIn the code chunk below, ggbetweenstats() is used to build a visual for two-sample mean test of Maths scores by gender.\n\nggbetweenstats(\n  data = exam_data,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\n\nggbetweenstats(\n  data = exam_data,\n  x = GENDER, \n  y = MATHS,\n  type = \"p\",\n  messages = FALSE\n)\n\n\n\n\nDefault information: - statistical details - Bayes Factor - sample sizes - distribution summary\n\n\n1.2.5 Oneway ANOVA Test: ggbetweenstats() method\nIn the code chunk below, ggbetweenstats() is used to build a visual for One-way ANOVA test on English score by race.\n\nggbetweenstats(\n  data = exam_data,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n“ns” → only non-significant\n“s” → only significant\n“all” → everything\n\nggbetweenstats - Summary of tests\n\n\n\n\n\n1.2.6 Significant Test of Correlation: ggscatterstats()\nIn the code chunk below, ggscatterstats() is used to build a visual for Significant Test of Correlation between Maths scores and English scores.\n\nggscatterstats(\n  data = exam_data,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n1.2.7 Significant Test of Association (Depedence) : ggbarstats() methods\nIn the code chunk below, the Maths scores is binned into a 4-class variable by using cut().\n\nexam1 <- exam_data %>% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\nIn this code chunk below ggbarstats() is used to build a visual for Significant Test of Association\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#getting-started-1",
@@ -299,5 +593,103 @@
     "title": "In-class Exercise 1",
     "section": "2.5 Designing Data-drive Graphics for Analysis IV",
     "text": "2.5 Designing Data-drive Graphics for Analysis IV\n\nggplot(data=exam_data, \n       aes(x=MATHS, y=ENGLISH)) +\n  geom_point() +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  geom_hline(yintercept=50,\n             linetype=\"dashed\",\n             color=\"grey60\",\n             size=1) + \n  geom_vline(xintercept=50, \n             linetype=\"dashed\",\n             color=\"grey60\",\n             size=1)"
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html",
+    "href": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html",
+    "title": "In-class_Ex01",
+    "section": "",
+    "text": "exam_data <- read_csv(\"data/Exam_data.csv\", show_col_types = FALSE)\n\n\nThe plotThe code chunk\n\n\n\n\n\n\n\n\n\n\nggplot(exam_data,\n       aes(sample=ENGLISH))+stat_qq()+stat_qq_line()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nwe can see that the points deviate significantly form the straight diagonal line. this is a clear indication that the set of data is not normally distributed.\n\n\n\nThe plotThe code chunk\n\n\n\n\n\n\n\n\n\n\nqq <- ggplot(exam_data,\n       aes(sample=ENGLISH))+stat_qq()+stat_qq_line()\n\nsw_t <- exam_data %>%\n  shapiro_test(ENGLISH)%>%\n  gt()\n\ntmp <- tempfile(fileext = '.png')\ngtsave(sw_t,tmp)\ntable_png <- png::readPNG(tmp,\n                        native=TRUE)\n\nqq+table_png"
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-plot",
+    "href": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-plot",
+    "title": "In-class_Ex01",
+    "section": "The plot",
+    "text": "The plot"
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-code-chunk",
+    "href": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-code-chunk",
+    "title": "In-class_Ex01",
+    "section": "The code chunk",
+    "text": "The code chunk\n\nggplot(exam_data,\n       aes(sample=ENGLISH))+stat_qq()+stat_qq_line()\n\n\n\n\n\n\n\nNote\n\n\n\nwe can see that the points deviate significantly form the straight diagonal line. this is a clear indication that the set of data is not normally distributed.\n\n\n::: panel-tabset"
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-plot-1",
+    "href": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-plot-1",
+    "title": "In-class_Ex01",
+    "section": "The plot",
+    "text": "The plot"
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-code-chunk-1",
+    "href": "In-class Exercise/In-class Exercise 4/In-class_Ex04.html#the-code-chunk-1",
+    "title": "In-class_Ex01",
+    "section": "The code chunk",
+    "text": "The code chunk\n\nqq <- ggplot(exam_data,\n       aes(sample=ENGLISH))+stat_qq()+stat_qq_line()\n\nsw_t <- exam_data %>%\n  shapiro_test(ENGLISH)%>%\n  gt()\n\ntmp <- tempfile(fileext = '.png')\ngtsave(sw_t,tmp)\ntable_png <- png::readPNG(tmp,\n                        native=TRUE)\n\nqq+table_png"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "Welcome to my website, where I’m sharing my visual analytics journey as I take the ISSS608-Visual Analytics and Applications with Prof. Kam Tin Seong as part of my Master of IT in Business (MITB) program at Singapore Management University."
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html",
+    "title": "Take-home_Ex01",
+    "section": "",
+    "text": "City of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.\nIn this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement byusing appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns."
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#install-r-packages-and-import-dataset",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#install-r-packages-and-import-dataset",
+    "title": "Take-home_Ex01",
+    "section": "2.1 Install R packages and import dataset",
+    "text": "2.1 Install R packages and import dataset\nThe code chunk below uses pacman::p_load() to check if packages are installed. If they are, they will be launched into R. The packages installed are\nplotly: Used for creating interactive web-based graphs.\nggstatsplot: Used for creating graphics with details from statistical tests.\nknitr: Used for dynamic report generation\npacthwork: Used to combine plots\nggdist: Used for visualising distribution and uncertainty\nggthemes: Provide additional themes for ggplot2\ntidyverse: A collection of core packages designed for data science, used extensively for data preparation and wrangling.\nAll packages can be found within CRAN.\n\n#Load packages\npacman::p_load(plotly, ggstatsplot, knitr, patchwork, ggdist, ggthemes, tidyverse)\n\nImport data from csv using readr::read_csv() and store it in variable FinancialJournal and Participants.\n\n#Import data\nFinancialJournal <- read_csv(\"data/FinancialJournal.csv\", show_col_types = FALSE)\n\nParticipants <- read_csv(\"data/Participants.csv\", show_col_types = FALSE)"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#data-introduction",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#data-introduction",
+    "title": "Take-home_Ex01",
+    "section": "2.2 Data Introduction",
+    "text": "2.2 Data Introduction\nFor the purpose of this study, two data sets are provided. They are:\nParticipants.csv\nContains information about the residents of City of Engagement that have agreed to participate in this study.\nparticipantId (integer): unique ID assigned to each participant. householdSize (integer): the number of people in the participant’s household haveKids (boolean): whether there are children living in the participant’s household. age (integer): participant’s age in years at the start of the study. educationLevel (string factor): the participant’s education level, one of: {“Low”, “HighSchoolOrCollege”, “Bachelors”, “Graduate”} interestGroup (char): a char representing the participant’s stated primary interest group, one of {“A”, “B”, “C”, “D”, “E”, “F”, “G”, “H”, “I”, “J”}. Note: specific topics of interest have been redacted to avoid bias. joviality (float): a value ranging from [0,1] indicating the participant’s overall happiness level at the start of the study. FinancialJournal.csv\nContains information about financial transactions.\nparticipantId (integer): unique ID corresponding to the participant affected timestamp (datetime): the time when the check-in was logged category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”} amount (double): the amount of the transaction"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#data-wrangling",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#data-wrangling",
+    "title": "Take-home_Ex01",
+    "section": "2.3 Data wrangling",
+    "text": "2.3 Data wrangling"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#exploratory-data-visualisation",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#exploratory-data-visualisation",
+    "title": "Take-home_Ex01",
+    "section": "3.1 Exploratory Data Visualisation",
+    "text": "3.1 Exploratory Data Visualisation"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#confirmatory-data-analysis-visualisation",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#confirmatory-data-analysis-visualisation",
+    "title": "Take-home_Ex01",
+    "section": "3.2 Confirmatory Data Analysis Visualisation",
+    "text": "3.2 Confirmatory Data Analysis Visualisation"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#visualising-the-uncertainty-of-point-estimates",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#visualising-the-uncertainty-of-point-estimates",
+    "title": "Take-home_Ex01",
+    "section": "3.3 Visualising the uncertainty of point estimates",
+    "text": "3.3 Visualising the uncertainty of point estimates"
+  },
+  {
+    "objectID": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#visualising-the-uncertainty-of-point-estimates-1",
+    "href": "Take-home Exercise/Take-home Exercise 1/Take-home_Ex01.html#visualising-the-uncertainty-of-point-estimates-1",
+    "title": "Take-home_Ex01",
+    "section": "3.4 Visualising the uncertainty of point estimates",
+    "text": "3.4 Visualising the uncertainty of point estimates"
   }
 ]
