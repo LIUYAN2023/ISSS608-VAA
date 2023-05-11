@@ -156,6 +156,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
  <span class="dropdown-text">Hands-on Exercise 4</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html">
+ <span class="dropdown-text">Hands-on Exercise 5</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -212,10 +216,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#install-r-packages-and-import-dataset" id="toc-install-r-packages-and-import-dataset" class="nav-link" data-scroll-target="#install-r-packages-and-import-dataset">2.1 Install R packages and import dataset</a></li>
   <li><a href="#data-introduction" id="toc-data-introduction" class="nav-link" data-scroll-target="#data-introduction">2.2 Data Introduction</a></li>
-  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2.3 Data wrangling</a></li>
-  </ul></li>
-  <li><a href="#visualisation" id="toc-visualisation" class="nav-link" data-scroll-target="#visualisation">3. Visualisation</a>
+  <li><a href="#data-prepration-and-wrangling" id="toc-data-prepration-and-wrangling" class="nav-link" data-scroll-target="#data-prepration-and-wrangling">3. Data Prepration and Wrangling</a>
   <ul class="collapse">
+  <li><a href="#install-r-packages" id="toc-install-r-packages" class="nav-link" data-scroll-target="#install-r-packages">3.1 Install R Packages</a></li>
+  <li><a href="#loading-the-dataset" id="toc-loading-the-dataset" class="nav-link" data-scroll-target="#loading-the-dataset">3.2 Loading the Dataset</a></li>
+  <li><a href="#data-cleaning-and-wrangling" id="toc-data-cleaning-and-wrangling" class="nav-link" data-scroll-target="#data-cleaning-and-wrangling">3.3 Data Cleaning and Wrangling</a></li>
+  </ul></li>
   <li><a href="#exploratory-data-visualisation" id="toc-exploratory-data-visualisation" class="nav-link" data-scroll-target="#exploratory-data-visualisation">3.1 Exploratory Data Visualisation</a></li>
   <li><a href="#confirmatory-data-analysis-visualisation" id="toc-confirmatory-data-analysis-visualisation" class="nav-link" data-scroll-target="#confirmatory-data-analysis-visualisation">3.2 Confirmatory Data Analysis Visualisation</a></li>
   <li><a href="#visualising-the-uncertainty-of-point-estimates" id="toc-visualising-the-uncertainty-of-point-estimates" class="nav-link" data-scroll-target="#visualising-the-uncertainty-of-point-estimates">3.3 Visualising the uncertainty of point estimates</a></li>
@@ -294,12 +300,213 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Contains information about financial transactions.</p>
 <p>participantId (integer): unique ID corresponding to the participant affected timestamp (datetime): the time when the check-in was logged category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”} amount (double): the amount of the transaction</p>
 </section>
-<section id="data-wrangling" class="level2">
-<h2 class="anchored" data-anchor-id="data-wrangling">2.3 Data wrangling</h2>
+<section id="data-prepration-and-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-prepration-and-wrangling">3. Data Prepration and Wrangling</h2>
+<section id="install-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="install-r-packages">3.1 Install R Packages</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(patchwork, tidyverse, rstatix, gt,ggstatsplot, ggdist, gganimate, png, gifski, nortest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="loading-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="loading-the-dataset">3.2 Loading the Dataset</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>FinancialJournal <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/FinancialJournal.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Participants <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Participants.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-cleaning-and-wrangling" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning-and-wrangling">3.3 Data Cleaning and Wrangling</h3>
+<section id="data-issue" class="level4">
+<h4 class="anchored" data-anchor-id="data-issue">3.3.1 Data Issue</h4>
+<table class="table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 32%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Item</th>
+<th style="text-align: center;">Issue</th>
+<th style="text-align: center;">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">wrong data type</td>
+<td style="text-align: center;">modify all the variable to correct data type</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">“RentAdjustment” is part of “shelter” cost</td>
+<td style="text-align: center;">replace all the “RentAdjustment” with “shelter”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">“timestamp” format is too complicated</td>
+<td style="text-align: center;">change “timestamp” to “month”</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">there are 1,113 rows data are duplicates</td>
+<td style="text-align: center;">remove all duplicate rows in the FinancialJournal data table</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">131 nos of participantId only have less than 12 months record</td>
+<td style="text-align: center;">remove the rows with less than 12 months record</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.Modify the data type###########################################################</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert participantId from numeric to integer</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>FinancialJournal<span class="sc">$</span>participantId <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(FinancialJournal<span class="sc">$</span>participantId)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert category from character to string factor with specified levels</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>FinancialJournal<span class="sc">$</span>category <span class="ot">&lt;-</span> <span class="fu">factor</span>(FinancialJournal<span class="sc">$</span>category, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Education"</span>, <span class="st">"Food"</span>, <span class="st">"Recreation"</span>, <span class="st">"RentAdjustment"</span>, <span class="st">"Shelter"</span>, <span class="st">"Wage"</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert amount from numeric to double</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>FinancialJournal<span class="sc">$</span>amount <span class="ot">&lt;-</span> <span class="fu">as.double</span>(FinancialJournal<span class="sc">$</span>amount)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert participantId from numeric to integer</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>participantId <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(Participants<span class="sc">$</span>participantId)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert householdSize from numeric to integer</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>householdSize <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(Participants<span class="sc">$</span>householdSize)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert haveKids from logical to Boolean</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>haveKids <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(Participants<span class="sc">$</span>haveKids)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert age from numeric to integer</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(Participants<span class="sc">$</span>age)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert educationLevel from character to string factor with specified levels</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>educationLevel <span class="ot">&lt;-</span> <span class="fu">factor</span>(Participants<span class="sc">$</span>educationLevel, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"HighSchoolOrCollege"</span>, <span class="st">"Bachelors"</span>, <span class="st">"Graduate"</span>))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert joviality from numeric to float</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>Participants<span class="sc">$</span>joviality <span class="ot">&lt;-</span> <span class="fu">as.double</span>(Participants<span class="sc">$</span>joviality)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Replace all the "RentAdjustment" with "shelter"###############################</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>FinancialJournal<span class="sc">$</span>category <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(FinancialJournal<span class="sc">$</span>category <span class="sc">==</span> <span class="st">"RentAdjustment"</span>, <span class="st">"Shelter"</span>, <span class="fu">as.character</span>(FinancialJournal<span class="sc">$</span>category)))</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Extract new variable month from the timestamp#################################</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>FinancialJournal <span class="ot">&lt;-</span> FinancialJournal <span class="sc">%&gt;%</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">month</span>(FinancialJournal<span class="sc">$</span>timestamp))</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Remove all duplicate rows in the FinancialJournal#############################</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Check duplicate rows in the FinancialJournal data table</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(FinancialJournal))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1113</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove all duplicate rows in the FinancialJournal</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>FinancialJournal <span class="ot">&lt;-</span> <span class="fu">distinct</span>(FinancialJournal)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. remove the rows with less than 12 months record###############################</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check the row with less than 12 months record</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>FinancialJournal <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participantId) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n_distinct</span>(month) <span class="sc">&lt;</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(participantId)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 131 × 1
+# Groups:   participantId [131]
+   participantId
+           &lt;int&gt;
+ 1            44
+ 2           127
+ 3           142
+ 4           154
+ 5           161
+ 6           256
+ 7           262
+ 8           267
+ 9           279
+10           285
+# ℹ 121 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the rows with less than 12 months record</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>FinancialJournal <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participantId) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month_count =</span> <span class="fu">n_distinct</span>(month)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month_count <span class="sc">&gt;=</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>month_count) <span class="ot">-&gt;</span> FinancialJournal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reshape-financialjournal-and-data-table-join" class="level4">
+<h4 class="anchored" data-anchor-id="reshape-financialjournal-and-data-table-join">3.3.2 Reshape FinancialJournal and Data Table Join</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group the rows of the "FinancialJournal" data table by "participantId" and "category"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Financial_sum <span class="ot">&lt;-</span> FinancialJournal <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participantId, category) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">average_amount =</span> <span class="fu">sum</span>(amount)<span class="sc">/</span><span class="dv">12</span>) </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the Financial_sum and make each "category" becomes a separate column </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>Financial_wide <span class="ot">&lt;-</span> Financial_sum <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(category, average_amount)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Join the two Participants and Financial_wide by participantId</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>joined_table <span class="ot">&lt;-</span> Participants <span class="sc">%&gt;%</span> </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                <span class="fu">inner_join</span>(Financial_wide, <span class="at">by =</span> <span class="st">"participantId"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="new-variable-wrangling" class="level4">
+<h4 class="anchored" data-anchor-id="new-variable-wrangling">3.3.3 New Variable Wrangling</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create new columns "Total_Expenditure" and "Saving_Ratio"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>joined_table <span class="ot">&lt;-</span> joined_table <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Education, Food, Recreation, Shelter), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="dv">0</span>)),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">Total_Expenditure =</span> (Education <span class="sc">+</span> Food <span class="sc">+</span> Recreation <span class="sc">+</span> Shelter),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Saving_Ratio =</span>( (Wage <span class="sc">+</span> Total_Expenditure)<span class="sc">/</span>Wage))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create age_bin column</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>joined_table<span class="sc">$</span>age_bin <span class="ot">&lt;-</span> <span class="fu">cut</span>(joined_table<span class="sc">$</span>age, </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="cn">Inf</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;=30"</span>, <span class="st">"&gt;30-40"</span>, <span class="st">"&gt;40-50"</span>, <span class="st">"&gt;50"</span>))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Wage_bin column</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>joined_table<span class="sc">$</span>Wage_bin <span class="ot">&lt;-</span> <span class="fu">cut</span>(joined_table<span class="sc">$</span>Wage,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">3000</span>, <span class="dv">4000</span>, <span class="dv">5000</span>, <span class="cn">Inf</span>),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;3000"</span>, <span class="st">"3000-&lt;4000"</span>, <span class="st">"4000-&lt;5000"</span>, <span class="st">"&gt;=5000"</span>))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>joined_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 880 × 16
+   participantId householdSize haveKids   age educationLevel      interestGroup
+           &lt;int&gt;         &lt;int&gt; &lt;lgl&gt;    &lt;int&gt; &lt;fct&gt;               &lt;chr&gt;        
+ 1             0             3 TRUE        36 HighSchoolOrCollege H            
+ 2             1             3 TRUE        25 HighSchoolOrCollege B            
+ 3             2             3 TRUE        35 HighSchoolOrCollege A            
+ 4             3             3 TRUE        21 HighSchoolOrCollege I            
+ 5             4             3 TRUE        43 Bachelors           H            
+ 6             5             3 TRUE        32 HighSchoolOrCollege D            
+ 7             6             3 TRUE        26 HighSchoolOrCollege I            
+ 8             7             3 TRUE        27 Bachelors           A            
+ 9             8             3 TRUE        20 Bachelors           G            
+10             9             3 TRUE        35 Bachelors           D            
+# ℹ 870 more rows
+# ℹ 10 more variables: joviality &lt;dbl&gt;, Education &lt;dbl&gt;, Food &lt;dbl&gt;,
+#   Recreation &lt;dbl&gt;, Shelter &lt;dbl&gt;, Wage &lt;dbl&gt;, Total_Expenditure &lt;dbl&gt;,
+#   Saving_Ratio &lt;dbl&gt;, age_bin &lt;fct&gt;, Wage_bin &lt;fct&gt;</code></pre>
+</div>
+</div>
 </section>
 </section>
-<section id="visualisation" class="level1">
-<h1>3. Visualisation</h1>
+</section>
 <section id="exploratory-data-visualisation" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-visualisation">3.1 Exploratory Data Visualisation</h2>
 </section>

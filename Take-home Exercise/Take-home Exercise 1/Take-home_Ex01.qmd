@@ -72,11 +72,146 @@ timestamp (datetime): the time when the check-in was logged
 category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”}
 amount (double): the amount of the transaction
 
-## 2.3  Data wrangling
+
+## 3. Data Prepration and Wrangling
+
+### 3.1 Install R Packages
+
+```{r}
+pacman::p_load(patchwork, tidyverse, rstatix, gt,ggstatsplot, ggdist, gganimate, png, gifski, nortest)
+```
+
+### 3.2 Loading the Dataset
+
+```{r}
+
+FinancialJournal <- read_csv("data/FinancialJournal.csv")
+Participants <- read_csv("data/Participants.csv")
+
+```
+
+### 3.3 Data Cleaning and Wrangling
+
+#### 3.3.1 Data Issue
+
+| Item |                             Issue                             |                           Solution                           |
+|:-------------:|:-------------------------:|:----------------------------------------:|
+|  1   |                        wrong data type                        |         modify all the variable to correct data type         |
+|  2   |          "RentAdjustment" is part of "shelter" cost           |       replace all the "RentAdjustment" with "shelter"        |
+|  3   |             "timestamp" format is too complicated             |                change "timestamp" to "month"                 |
+|  4   |           there are 1,113 rows data are duplicates            | remove all duplicate rows in the FinancialJournal data table |
+|  5   | 131 nos of participantId only have less than 12 months record |       remove the rows with less than 12 months record        |
+
+```{r}
+
+# 1.Modify the data type###########################################################
+
+# Convert participantId from numeric to integer
+FinancialJournal$participantId <- as.integer(FinancialJournal$participantId)
+
+# Convert category from character to string factor with specified levels
+FinancialJournal$category <- factor(FinancialJournal$category, levels = c("Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"))
+
+# Convert amount from numeric to double
+FinancialJournal$amount <- as.double(FinancialJournal$amount)
+
+# Convert participantId from numeric to integer
+Participants$participantId <- as.integer(Participants$participantId)
+
+# Convert householdSize from numeric to integer
+Participants$householdSize <- as.integer(Participants$householdSize)
+
+# Convert haveKids from logical to Boolean
+Participants$haveKids <- as.logical(Participants$haveKids)
+
+# Convert age from numeric to integer
+Participants$age <- as.integer(Participants$age)
+
+# Convert educationLevel from character to string factor with specified levels
+Participants$educationLevel <- factor(Participants$educationLevel, levels = c("Low", "HighSchoolOrCollege", "Bachelors", "Graduate"))
+
+# Convert joviality from numeric to float
+Participants$joviality <- as.double(Participants$joviality)
 
 
+# 2. Replace all the "RentAdjustment" with "shelter"###############################
 
-# 3. Visualisation
+FinancialJournal$category <- factor(ifelse(FinancialJournal$category == "RentAdjustment", "Shelter", as.character(FinancialJournal$category)))
+
+# 3. Extract new variable month from the timestamp#################################
+
+FinancialJournal <- FinancialJournal %>%
+  mutate(month = month(FinancialJournal$timestamp))
+
+
+# 4. Remove all duplicate rows in the FinancialJournal#############################
+
+# Check duplicate rows in the FinancialJournal data table
+sum(duplicated(FinancialJournal))
+
+# Remove all duplicate rows in the FinancialJournal
+FinancialJournal <- distinct(FinancialJournal)
+
+
+# 5. remove the rows with less than 12 months record###############################
+
+# check the row with less than 12 months record
+FinancialJournal %>% 
+  group_by(participantId) %>% 
+  filter(n_distinct(month) < 12) %>% 
+  distinct(participantId)
+
+# remove the rows with less than 12 months record
+FinancialJournal %>%
+  group_by(participantId) %>%
+  mutate(month_count = n_distinct(month)) %>%
+  filter(month_count >= 12) %>%
+  select(-month_count) -> FinancialJournal
+```
+
+#### 3.3.2 Reshape FinancialJournal and Data Table Join
+
+```{r}
+# Group the rows of the "FinancialJournal" data table by "participantId" and "category"
+Financial_sum <- FinancialJournal %>%
+  group_by(participantId, category) %>%
+  summarise(average_amount = sum(amount)/12) 
+
+
+# Reshape the Financial_sum and make each "category" becomes a separate column 
+Financial_wide <- Financial_sum %>%
+  spread(category, average_amount)
+
+
+# Join the two Participants and Financial_wide by participantId
+
+joined_table <- Participants %>% 
+                inner_join(Financial_wide, by = "participantId")
+
+```
+
+#### 3.3.3 New Variable Wrangling
+
+```{r}
+
+# Create new columns "Total_Expenditure" and "Saving_Ratio"
+joined_table <- joined_table %>%
+  mutate(across(c(Education, Food, Recreation, Shelter), ~replace_na(., 0)),
+        Total_Expenditure = (Education + Food + Recreation + Shelter),
+        Saving_Ratio =( (Wage + Total_Expenditure)/Wage))
+        
+# Create age_bin column
+joined_table$age_bin <- cut(joined_table$age, 
+                            breaks = c(-Inf, 30, 40, 50, Inf),
+                            labels = c("<=30", ">30-40", ">40-50", ">50"))
+
+# Create Wage_bin column
+joined_table$Wage_bin <- cut(joined_table$Wage,
+                             breaks = c(-Inf, 3000, 4000, 5000, Inf),
+                             labels = c("<3000", "3000-<4000", "4000-<5000", ">=5000"))
+
+joined_table
+```
 
 ## 3.1 Exploratory Data Visualisation
 ## 3.2 Confirmatory Data Analysis Visualisation
