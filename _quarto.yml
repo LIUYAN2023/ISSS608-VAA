@@ -29,6 +29,8 @@ website:
           href: "In-class Exercise/In-class Exercise 3/In-class_Ex03.html"
         - text: "In-class Exercise 4"
           href: "In-class Exercise/In-class Exercise 4/In-class_Ex04.html"
+        - text: "In-class Exercise 5"
+          href: "In-class Exercise/In-class Exercise 5/In-class_Ex05.html"
     - text: "Take-home Exercise"
       menu: 
         - text: "Take-home Exercise 1"
@@ -41,6 +43,8 @@ website:
 
 format:
   html:
+    code-fold: true
+    code-summary: "show the code"
     theme: flatly
     css: styles.css
     toc: true

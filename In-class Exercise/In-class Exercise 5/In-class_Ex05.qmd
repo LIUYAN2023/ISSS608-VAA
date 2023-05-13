@@ -1,0 +1,28 @@
+---
+title: "In-class_Ex05"
+author: "LIU YAN"
+date: "13 May 2023"
+editor: visual
+---
+
+
+```{r}
+pacman::p_load(jsonlite,igraph, tidygraph, ggraph, 
+               visNetwork,tidyverse)
+
+```
+
+
+```{r}
+MC1 <- fromJSON("data/MC1.json")
+
+```
+
+```{r}
+MC1_nodes<- as_tibble(MC1$nodes) %>%
+  select(id,type,country)
+
+MC1_edges<- as_tibble(MC1$links) %>%
+  select(source,target, type, weight,key)
+```
+
