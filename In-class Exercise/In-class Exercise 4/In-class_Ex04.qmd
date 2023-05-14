@@ -10,7 +10,6 @@ execute:
 editor: visual
 ---
 
-
 ```{r}
 pacman:: p_load(rstatix, gt, patchwork, tidyverse)
 
@@ -20,8 +19,8 @@ pacman:: p_load(rstatix, gt, patchwork, tidyverse)
 exam_data <- read_csv("data/Exam_data.csv", show_col_types = FALSE)
 
 ```
-::: panel-tabset
 
+::: panel-tabset
 ## The plot
 
 ```{r}
@@ -33,6 +32,7 @@ ggplot(exam_data,
 ```
 
 ## The code chunk
+
 ```{r}
 #| eval: false
 #| fig-width: 4
@@ -42,12 +42,13 @@ ggplot(exam_data,
 ```
 :::
 
-::: {.callout-note}
+::: callout-note
 we can see that the points deviate significantly form the straight diagonal line. this is a clear indication that the set of data is not normally distributed.
 :::
 
 ::: panel-tabset
 ## The plot
+
 ```{r}
 #| echo: false
 qq <- ggplot(exam_data,
@@ -68,6 +69,7 @@ qq+table_png
 ```
 
 ## The code chunk
+
 ```{r}
 #| eval: false
 qq <- ggplot(exam_data,
