@@ -19,7 +19,7 @@ This exercise aims to reveal the demographic and financial characteristics of th
 
 The code chunk below uses pacman::p_load() to check if packages are installed. If they are, they will be launched into R. The packages installed are
 
-[pacthwork](https://patchwork.data-imaginist.com/): Used to combine plots
+[pacthwork](https://patchwork.data-imaginist.com/): Used to combine plots.
 
 [DT](https://rstudio.github.io/DT/):provides an R interface to the JavaScript library DataTables that create interactive table on html page.
 
@@ -31,11 +31,11 @@ The code chunk below uses pacman::p_load() to check if packages are installed. I
 
 [ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/): Used for creating graphics with details from statistical tests.
 
-[ggdist](https://mjskay.github.io/ggdist/): Used for visualising distribution and uncertainty
+[ggdist](https://mjskay.github.io/ggdist/): Used for visualising distribution and uncertainty.
 
 [png](https://cran.r-project.org/web/packages/png/index.html): read, write and display bitmap images stored in the PNG format.
 
-[ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/): Provide additional themes for ggplot2
+[ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/): Provide additional themes for ggplot2.
 
 [ggplot2](https://ggplot2.tidyverse.org/):ggplot2 is a system for declaratively creating graphics.
 
@@ -289,9 +289,9 @@ girafe(
 Elements associated with interestGroup will be highlighted upon mouse over.
 :::
 
-### 3.1.2 Age vs HaveKids pyramid
+### 3.1.2 Age vs HaveKids Pyramid
 
-From Age vs HaveKids pyramid, we can find there is a higher prevalence of individuals without children across various age levels in the participant population,.
+From Age vs HaveKids pyramid, we can find there is a higher prevalence of individuals without children across various age levels in the participant population.
 
 ```{r}
 
@@ -522,7 +522,7 @@ plot_ly(data = joined_table,
 
 Maintaining a jovial attitude can be a contributing factor to a more harmonious social environment and can improve overall well-being. In this section, we will conduct an analysis of the factors that affect citizens' joviality and explore the differences in joviality levels across various demographic groups.
 
-### 3.3.1 Significant Test of Correlation Between Joviality and Saving_Ratio/Total_Expenditure/Wage_bin/Recreation
+### 3.3.1 Significant Test of Correlation
 
 ```{r}
 # Define two scatter plots with ggscatterstats function
@@ -589,7 +589,7 @@ These results suggest that there are significant correlations between joviality 
 
 ### Normality Assumption
 
-Before performing the necessary hypothesis testing, we need to choose between parametric and non-parametric test. perform Anderson-Darling test with confidence level of 95% to test the null hypothesis that the joviality by different factor(education_level,age,have kids, interestGroup) is normally distributed.
+Before performing the necessary hypothesis testing, we need to choose between parametric and non-parametric test. perform Shapiro-Wilk normality test with confidence level of 95% to test the null hypothesis that the joviality by different factor(education_level,age,have kids) is normally distributed.
 
 ::: panel-tabset
 ## Joviality by EducationLevel
@@ -689,7 +689,7 @@ ggarrange(qq_plot, ncol = 1, nrow = 1)
 ```
 :::
 
-Based on the result above, the null hypothesis is rejected as some of the distributions are below 0.05 critical value. As such, we are not able to confirm normality assumption for distribution of joviality by education_level/age/have kids/ interestGroup).
+Based on the result above, the null hypothesis is rejected as some of the distributions are below 0.05 critical value. As such, we are not able to confirm normality assumption for distribution of joviality by education_level/age/have kids.
 
 ::: callout-note
 Since we are unable to confirm normality assumption, non-parametric test (Kruskal-Wallis and Mann-Whitney) will be used for hypothesis testing. Note that the null hypothesis is no difference between median joviality by EducationLevel/Age_bin/HaveKids.
