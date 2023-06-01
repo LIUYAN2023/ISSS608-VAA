@@ -17,6 +17,69 @@ span.underline{text-decoration: underline;}
 div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -54,6 +117,10 @@ ul.task-list{list-style: none;}
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="../../site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="../../site_libs/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+<script src="../../site_libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="../../site_libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -101,6 +168,10 @@ ul.task-list{list-style: none;}
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">
  <span class="dropdown-text">Hands-on Exercise 6</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html">
+ <span class="dropdown-text">Hands-on Exercise 7</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -135,6 +206,10 @@ ul.task-list{list-style: none;}
     <a class="dropdown-item" href="../../Take-home Exercise/Take-home Exercise 2/Take-home_Ex02.html">
  <span class="dropdown-text">Take-home Exercise 2</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home Exercise/Take-home Exercise 3/Take-home_Ex03.html">
+ <span class="dropdown-text">Take-home Exercise 3</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -156,7 +231,31 @@ ul.task-list{list-style: none;}
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1. Overview</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2. Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#install-r-packages-and-import-dataset" id="toc-install-r-packages-and-import-dataset" class="nav-link" data-scroll-target="#install-r-packages-and-import-dataset">2.1 Install R Packages and Import Dataset</a></li>
+  <li><a href="#data-introduction" id="toc-data-introduction" class="nav-link" data-scroll-target="#data-introduction">2.2 Data Introduction</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2.3 Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#extract-nodes-edges" id="toc-extract-nodes-edges" class="nav-link" data-scroll-target="#extract-nodes-edges">2.3.1 Extract Nodes &amp; Edges</a></li>
+  <li><a href="#data-preparation-_-hscode" id="toc-data-preparation-_-hscode" class="nav-link" data-scroll-target="#data-preparation-_-hscode">2.3.2 Data Preparation _ HScode</a></li>
+  <li><a href="#data-preparation-_-running-year-category" id="toc-data-preparation-_-running-year-category" class="nav-link" data-scroll-target="#data-preparation-_-running-year-category">2.3.3 Data Preparation _ Running Year Category</a></li>
+  <li><a href="#data-preparation-_-betweennessin-degreeout-degree" id="toc-data-preparation-_-betweennessin-degreeout-degree" class="nav-link" data-scroll-target="#data-preparation-_-betweennessin-degreeout-degree">2.3.4 Data Preparation _ Betweenness/In-degree/Out-degree</a></li>
+  <li><a href="#data-preparation-_-data-feature-extraction" id="toc-data-preparation-_-data-feature-extraction" class="nav-link" data-scroll-target="#data-preparation-_-data-feature-extraction">2.3.5 Data Preparation _ Data Feature Extraction</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#data-visualisation" id="toc-data-visualisation" class="nav-link" data-scroll-target="#data-visualisation">3. Data Visualisation</a>
+  <ul class="collapse">
+  <li><a href="#interactive-network-graph-with-visnetwork" id="toc-interactive-network-graph-with-visnetwork" class="nav-link" data-scroll-target="#interactive-network-graph-with-visnetwork">3.1 Interactive Network Graph with visNetwork</a></li>
+  <li><a href="#ego-network-for-key-node" id="toc-ego-network-for-key-node" class="nav-link" data-scroll-target="#ego-network-for-key-node">3.2 Ego-Network for Key Node</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -189,8 +288,739 @@ ul.task-list{list-style: none;}
 
 </header>
 
+<section id="overview" class="level1">
+<h1>1. Overview</h1>
+<p>The country of Oceanus has requested the assistance of FishEye International in identifying companies that may be involved in illegal, unreported, and unregulated (IUU) fishing. As part of this collaboration, FishEye’s analysts have been provided with import/export data related to Oceanus’ marine and fishing industries.</p>
+<p>To facilitate their analysis, FishEye has transformed the trade data into a knowledge graph. During their analysis, FishEye analysts have found that node-link diagrams provide a valuable high-level overview of the knowledge graph. However, they are now seeking visualizations that offer more detailed insights into patterns involving entities within the knowledge graph.</p>
+<p><img src="../../images/take-home_02.jpg" class="img-fluid"></p>
+<p>Based on FishEye’s previous experiences, they are aware that companies engaged in illegal fishing tend to cease their operations temporarily but often resume their activities under different names.</p>
+<p>The objective of this exercise is to compare the activities of these companies over time and identify any indications of their potential return to illicit practices.</p>
+<p>This exercise source is from: <a href="https://vast-challenge.github.io/2023/MC2.html">Mini-Challenge 2 task 1</a></p>
+</section>
+<section id="data-preparation" class="level1">
+<h1>2. Data Preparation</h1>
+<section id="install-r-packages-and-import-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="install-r-packages-and-import-dataset">2.1 Install R Packages and Import Dataset</h2>
+<p>The code chunk below uses pacman::p_load() to check if packages are installed. If they are, they will be launched into R. The packages installed are:</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite, tidygraph, ggraph, visNetwork, lubridate, tidyverse,readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a>: A simple and robust JSON parser and generator for R.</p>
+<p><a href="https://tidygraph.data-imaginist.com/">tidygraph</a>: this package provides a tidy API for graph/network manipulation.</p>
+<p><a href="https://davidgohel.github.io/ggiraph/">ggraph</a>: ggiraph is a tool that allows you to create dynamic ggplot graphs.</p>
+<p><a href="http://datastorm-open.github.io/visNetwork/">visNetwork</a>: an R package for network visualization, using vis.js javascript library.</p>
+<p><a href="https://lubridate.tidyverse.org/">lubridate</a>: an R package that makes it easier to work with dates and times.</p>
+<p><a href="https://www.tidyverse.org/">tidyverse</a>: A collection of core packages designed for data science, used extensively for data preparation and wrangling.</p>
+<p><a href="https://readxl.tidyverse.org/">readxl</a>：An R package makes it easy to get data out of Excel and into R.</p>
+<p>All packages can be found within CRAN.</p>
+</section>
+<section id="data-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="data-introduction">2.2 Data Introduction</h2>
+<p>In the code chunk below, <code>fromJSON()</code> of jsonlite package is used to import mc2_challenge_graph.json into R environment.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mc2_data <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/mc2_challenge_graph.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For the purpose of this study, a directed multi-graph is provided. There are totally 34552 nodes and 5464092 directed edges.</p>
+<p><strong>Node Attributes:</strong></p>
+<p><code>id</code> – Name of the company that originated (or received) the shipment.</p>
+<p><code>shpcountry</code> – Country the company most often associated with when shipping.</p>
+<p><code>rcvcountry</code> – Country the company most often associated with when receiving.</p>
+<p><code>dataset</code> – Always ‘MC2’.</p>
+<p><strong>Edge Attributes:</strong></p>
+<p><code>arrivaldate</code> – Date the shipment arrived at port in YYYY-MM-DD format.</p>
+<p><code>hscode</code> – Harmonized System code for the shipment. Can be joined with the hscodes table to get additional details.</p>
+<p><code>valueofgoods_omu</code>– Customs-declared value of the total shipment, in Oceanus Monetary Units (OMU).</p>
+<p><code>volumeteu</code>– The volume of the shipment in ‘Twenty-foot equivalent units’, roughly how many 20-foot standard containers would be required. (Actual number of containers may have been different as there are 20ft and 40ft standard containers and tankers that do not use containers)</p>
+<p><code>weightkg</code>– The weight of the shipment in kilograms (if known).</p>
+<p><code>dataset</code>– Always ‘MC2’.</p>
+<p><code>type</code>– Always ‘shipment’ for MC2.</p>
+<p><code>generated_by</code> – Name of the program that generated the edge. (Only found on ‘bundle’ records.)</p>
+<p><strong>Note:</strong> Some data provided by Oceanus was anonymized leading to some shipper and receiver names/countries being omitted. These are represented by numerical names in the graph.</p>
+</section>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">2.3 Data Wrangling</h2>
+<section id="extract-nodes-edges" class="level3">
+<h3 class="anchored" data-anchor-id="extract-nodes-edges">2.3.1 Extract Nodes &amp; Edges</h3>
+<p><strong>Extracting nodes :</strong> involves creating a tibble data frame called mc2_nodes from the mc2_data list object by using the select() function, which serves two purposes: selecting the required fields and re-organise the sequence of the fields.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mc2_nodes <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(mc2_data<span class="sc">$</span>nodes) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, shpcountry, rcvcountry)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Extracting Edges:</strong> The code chunk is used to extract edges data table from mc2_data list object and save the output in a tibble data frame object called mc2_edges.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mc2_edges <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(mc2_data<span class="sc">$</span>links) <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ArrivalDate =</span> <span class="fu">ymd</span>(arrivaldate)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">year</span>(ArrivalDate)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(source, target, ArrivalDate, Year, hscode, valueofgoods_omu, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         volumeteu, weightkg, valueofgoodsusd) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>mutate() is used two times to create two derive fields.</p>
+<ul>
+<li><p>ymd() of lubridate package is used to covert arrivaldate field from character data type into date data type.</p></li>
+<li><p>year() of lubridate package is used to convert the values in ArrivalDate field into year values.</p></li>
+</ul></li>
+<li><p>select() is used not only to select the field needed but also to re-organise the sequent of the fields.</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="data-preparation-_-hscode" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation-_-hscode">2.3.2 Data Preparation _ HScode</h3>
+<p>The <a href="https://www.trade.gov/harmonized-system-hs-codes">Harmonized System</a> is a standardized numerical method of classifying traded products. It is used by customs authorities around the world to identify products when assessing duties and taxes and for gathering statistics.</p>
+<p>In the original dataframe, there are numerous HScodes that are unrelated to “Fishing”. To filter out observations specifically related to fishing, we utilize the <code>grep</code> function to select only those HScodes that begin with <strong>301-308</strong>.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filters the dataframe mc2_edges hscode start with 301-308</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mc2_edges <span class="ot">&lt;-</span> mc2_edges[<span class="fu">grep</span>(<span class="st">"^30[1-8]"</span>, mc2_edges<span class="sc">$</span>hscode), ]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count each hscode frequency</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>hscode_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(mc2_edges<span class="sc">$</span>hscode)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by count from highest to lowest</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>hscode_counts_sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(hscode_counts, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe containing hscode and count</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>hscode_counts_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">hscode =</span> <span class="fu">names</span>(hscode_counts_sorted), <span class="at">count =</span> hscode_counts_sorted, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>After the compilation of the hscode_counts_df, it is important to determine the meaning of the HScode. Therefore, we proceed by reading the HScode list and employing the <code>left_join</code> function to establish a linkage between the item description and the hscode_counts_df data frame.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the last zero in hscode</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hscode_counts_df<span class="sc">$</span>hscode <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"0$"</span>, <span class="st">""</span>, hscode_counts_df<span class="sc">$</span>hscode)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># R an Excel file "HScode"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>HScode_list <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/HScode.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the HS Code data type</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>HScode_list<span class="sc">$</span><span class="st">`</span><span class="at">HS Code</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.character</span>(HScode_list<span class="sc">$</span><span class="st">`</span><span class="at">HS Code</span><span class="st">`</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># hscode_counts_df left join HScode_list to improt the HScode description</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hscode_counts_df, <span class="fu">select</span>(HScode_list, <span class="sc">-</span>S.No.), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"hscode"</span> <span class="ot">=</span> <span class="st">"HS Code"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We have summarized the top 6 most frequently occurring HScodes in the dataframe, along with their corresponding fish types based on the HScode descriptions. These HScodes and their associated fish types will serve as the starting point for our research.</p>
+<table class="table">
+<caption><strong>Top Frequency HScode</strong></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">HScode</th>
+<th style="text-align: left;">Count</th>
+<th style="text-align: left;">Fish Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">306170</td>
+<td style="text-align: left;">156204</td>
+<td style="text-align: left;">Other shrimps and prawns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">304620</td>
+<td style="text-align: left;">87340</td>
+<td style="text-align: left;">Catfish</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">304610</td>
+<td style="text-align: left;">36615</td>
+<td style="text-align: left;">Tilapias</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">304710</td>
+<td style="text-align: left;">27231</td>
+<td style="text-align: left;">Cod</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">304750</td>
+<td style="text-align: left;">23926</td>
+<td style="text-align: left;">Alaska Pollack</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">304810</td>
+<td style="text-align: left;">21433</td>
+<td style="text-align: left;">Pacific salmonAtlantic salmon and Danube salmon</td>
+</tr>
+</tbody>
+</table>
+<p>The HScode serves as an indicator of the product variety within each company. To analyze this, we have introduced a new variable called “HScode_type” that tallies the number of unique HScode values found in all transaction records for each company (node).</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create transitional dataframe to record all the company and corresponding Year</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>transition_data_HScode <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">company =</span> <span class="fu">c</span>(mc2_edges<span class="sc">$</span>source, mc2_edges<span class="sc">$</span>target),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">HScode =</span> <span class="fu">c</span>(mc2_edges<span class="sc">$</span>hscode, mc2_edges<span class="sc">$</span> hscode)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregating companies &amp; count each company's running year and running_ year_ Category</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>aggregate_data_HScode <span class="ot">&lt;-</span> transition_data_HScode <span class="sc">%&gt;%</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(company) <span class="sc">%&gt;%</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HScode_type =</span> <span class="fu">n_distinct</span>(HScode)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(company, HScode_type)<span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HScode_category =</span> <span class="fu">cut</span>(HScode_type, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">1</span>, <span class="cn">Inf</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;=1"</span>,<span class="st">"&gt;1"</span>)))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the data </span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> <span class="fu">subset</span>(aggregate_data_HScode, HScode_type <span class="sc">&lt;</span> <span class="dv">10</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histogram</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(filtered_data, <span class="fu">aes</span>(<span class="at">x =</span> HScode_type)) <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"HScode_type"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>, <span class="at">title =</span> <span class="st">"Histogram of HScode_type (&lt;10, binwidth = 1)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In order to gain a holistic understanding of the distribution of companies with different product varieties, we have generated a histogram depicting the frequency of HScode_type values below 10. Upon examining the histogram, we observe a substantial proportion of companies having an HScode_type value of 1 compared to other HScode_type values.</p>
+<p>To further categorize the companies based on their product variety, we have introduced a new categorical variable named “HScode_category.” This variable assigns a label to each node, differentiating between HScode_type values less than or equal to 1 and those greater than 1. HScode_type &lt;= 1 indicate companies with a narrow focus, specializing in a specific fish type. Conversely, HScode_type &gt;1 indicates companies with a relatively diverse range of products.</p>
+</section>
+<section id="data-preparation-_-running-year-category" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation-_-running-year-category">2.3.3 Data Preparation _ Running Year Category</h3>
+<p>In light of the circumstance where companies engaged in illegal fishing activities might cease operations but subsequently resume their activities under a different corporate identity, it is noteworthy that companies with shorter running years possess a higher likelihood of engaging in illicit behaviors.so we create transition_data to count each company’s running years.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create transitional dataframe to record all the company and corresponding Year</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>transition_data_Year <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">company =</span> <span class="fu">c</span>(mc2_edges<span class="sc">$</span>source, mc2_edges<span class="sc">$</span>target),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year =</span> <span class="fu">c</span>(mc2_edges<span class="sc">$</span>Year, mc2_edges<span class="sc">$</span>Year)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregating companies &amp; count each company's running year and running_ year_ Category</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>aggregate_data_Year <span class="ot">&lt;-</span> transition_data_Year <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(company) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">running_year =</span> <span class="fu">n_distinct</span>(Year)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(company, running_year) <span class="sc">%&gt;%</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">running_year_category =</span> <span class="fu">cut</span>(running_year, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">2</span>, <span class="cn">Inf</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;=2"</span>,<span class="st">"&gt;2"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To facilitate analysis, we have categorized the running years into distinct intervals, namely “&lt;=2” and “&gt;2”, to assess the stability of the companies. Within these intervals:</p>
+<ul>
+<li><p>“&lt;=2” category represents companies with lower stability</p></li>
+<li><p>“&gt;2” years category signifies a relatively high level of stability.</p></li>
+</ul>
+<p>It is worth noting that companies with lower stability, falling within the “&lt;=2” category, tend to exhibit a higher likelihood of being associated with suspected illegal activities.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a barchart of running_year distribution with adjusted x-axis labels</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(aggregate_data_Year, <span class="fu">aes</span>(<span class="at">x =</span> running_year)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">'#808de8'</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Running Year"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distribution of Running Year"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">labels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">'bisque3'</span>),</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"dimgrey"</span>, <span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The barchart depicting the “Distribution of Running Year” reveals a notable observation:</p>
+<ul>
+<li><p>A considerable proportion of companies, exceeding 4000 in number, have a running year of merely one year.</p></li>
+<li><p>As the running year increases, there is a gradual decline in the number of companies.</p></li>
+<li><p>However, it is intriguing to note that there exists a substantial count of over 1000 companies that have been operating for seven years, surpassing the counts of companies with three, four, five, and six running years.</p></li>
+</ul>
+</section>
+<section id="data-preparation-_-betweennessin-degreeout-degree" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation-_-betweennessin-degreeout-degree">2.3.4 Data Preparation _ Betweenness/In-degree/Out-degree</h3>
+<p>Centrality is a significant characteristic in network analysis. In this section, we will compute three important centrality measures for each node: betweenness centrality, in-degree centrality, and out-degree centrality.</p>
+<p><strong>Betweenness centrality</strong>: This measure quantifies the extent to which a node acts as a bridge or mediator in the network. It calculates the fraction of shortest paths between all pairs of nodes that pass through a particular node.</p>
+<p><strong>In-degree centrality</strong>: This measure focuses on the number of incoming edges or connections to a node. It signifies the degree to which a node receives interactions or dependencies from other nodes in the network.</p>
+<p><strong>Out-degree centrality</strong>: This measure pertains to the number of outgoing edges or connections from a node. It indicates the degree to which a node initiates interactions or dependencies with other nodes in the network.</p>
+<p>Through the computation of these centrality measures, we can gain insights into the structural importance and influence of each node within the network, enabling us to better understand the dynamics and functioning of the network as a whole.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("igraph")  # Install the 'igraph' package</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)             <span class="co"># Load the 'igraph' package</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregating edges data</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mc2_all_edges_aggregated <span class="ot">&lt;-</span> mc2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">from =</span> source, <span class="at">to =</span> target, hscode, Year) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">weights =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(from <span class="sc">!=</span> to) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weights <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting unique node IDs</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>id1_all <span class="ot">&lt;-</span> mc2_all_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(from) <span class="sc">%&gt;%</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> from)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>id2_all <span class="ot">&lt;-</span> mc2_all_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(to) <span class="sc">%&gt;%</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> to)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>mc2_all_nodes_extracted <span class="ot">&lt;-</span> <span class="fu">rbind</span>(id1_all, id2_all) <span class="sc">%&gt;%</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>mc2_all_graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> mc2_all_nodes_extracted,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">edges =</span> mc2_all_edges_aggregated,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate betweenness centrality</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>betweenness_centrality <span class="ot">&lt;-</span> <span class="fu">betweenness</span>(mc2_all_graph)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate in-degree centrality</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>in_degree_centrality <span class="ot">&lt;-</span> <span class="fu">degree</span>(mc2_all_graph, <span class="at">mode =</span> <span class="st">"in"</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate out-degree centrality</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>out_degree_centrality <span class="ot">&lt;-</span> <span class="fu">degree</span>(mc2_all_graph, <span class="at">mode =</span> <span class="st">"out"</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the node attributes and ID to a dataframe</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>node_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="fu">V</span>(mc2_all_graph)<span class="sc">$</span>id,</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">Betweenness =</span> betweenness_centrality,</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">In_Degree =</span> in_degree_centrality,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">Out_Degree =</span> out_degree_centrality</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Based on the node centrality table, we can classify the nodes into three distinct groups: Wholesaler: Nodes exhibiting non-zero values in betweenness centrality, in-degree centrality, and out-degree centrality. These nodes demonstrate a comprehensive pattern of connectivity within the network, indicating their involvement in multiple fish trading flows. We can infer that these nodes operate as wholesalers, facilitating the buying and selling of fish products. Buyer: Nodes displaying non-zero values in in-degree centrality, while both betweenness centrality and out-degree centrality possess zero values. These nodes primarily act as recipients or buyers within the network, buying fish products from other nodes. Supplier: Nodes featuring non-zero values in out-degree centrality, while both betweenness centrality and in-degree centrality exhibit zero values. These nodes operate as suppliers within the network, selling fish product to other nodes.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label <span class="ot">&lt;-</span> <span class="cn">NA</span>  <span class="co"># Create a new column for storing company_ Label</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign values to company_label based on conditions</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Betweenness <span class="sc">&gt;</span> <span class="dv">20</span>] <span class="ot">&lt;-</span> <span class="st">"wholesaler_high"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Betweenness <span class="sc">&lt;=</span> <span class="dv">20</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Betweenness <span class="sc">&gt;=</span> <span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="st">"wholesaler_medium"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Betweenness <span class="sc">&lt;</span> <span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="st">"wholesaler_low"</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">&gt;</span> <span class="dv">150</span>] <span class="ot">&lt;-</span> <span class="st">"buyer_high"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">&lt;=</span> <span class="dv">150</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">&gt;=</span> <span class="dv">50</span>] <span class="ot">&lt;-</span> <span class="st">"buyer_mediu m"</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">&lt;</span> <span class="dv">50</span>] <span class="ot">&lt;-</span> <span class="st">"buyer_low"</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">&gt;</span> <span class="dv">50</span>] <span class="ot">&lt;-</span> <span class="st">"supplier_high"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">&lt;=</span> <span class="dv">50</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">&gt;=</span> <span class="dv">20</span>] <span class="ot">&lt;-</span> <span class="st">"supplier_medium"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_label[node_data<span class="sc">$</span>Betweenness <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>In_Degree <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> node_data<span class="sc">$</span>Out_Degree <span class="sc">&lt;</span> <span class="dv">20</span>] <span class="ot">&lt;-</span> <span class="st">"supplier_low"</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the normalization of Betweenness, In_Degree, and Out_Degree</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>normalized_betweenness <span class="ot">&lt;-</span> (node_data<span class="sc">$</span>Betweenness <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>Betweenness)) <span class="sc">/</span> (<span class="fu">max</span>(node_data<span class="sc">$</span>Betweenness) <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>Betweenness))</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>normalized_in_degree <span class="ot">&lt;-</span> (node_data<span class="sc">$</span>In_Degree <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>In_Degree)) <span class="sc">/</span> (<span class="fu">max</span>(node_data<span class="sc">$</span>In_Degree) <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>In_Degree))</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>normalized_out_degree <span class="ot">&lt;-</span> (node_data<span class="sc">$</span>Out_Degree <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>Out_Degree)) <span class="sc">/</span> (<span class="fu">max</span>(node_data<span class="sc">$</span>Out_Degree) <span class="sc">-</span> <span class="fu">min</span>(node_data<span class="sc">$</span>Out_Degree))</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the 'size' column based on conditions</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>size_all <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(node_data<span class="sc">$</span>Betweenness <span class="sc">!=</span> <span class="dv">0</span>, normalized_betweenness,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">ifelse</span>(node_data<span class="sc">$</span>Out_Degree <span class="sc">!=</span> <span class="dv">0</span>, normalized_out_degree,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">ifelse</span>(node_data<span class="sc">$</span>In_Degree <span class="sc">!=</span> <span class="dv">0</span>, normalized_in_degree, <span class="cn">NA</span>)))</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the 'size' column based on conditions</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>node_data<span class="sc">$</span>company_category <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(node_data<span class="sc">$</span>Betweenness <span class="sc">!=</span> <span class="dv">0</span>, <span class="st">"Wholesaler"</span>,</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">ifelse</span>(node_data<span class="sc">$</span>Out_Degree <span class="sc">!=</span> <span class="dv">0</span>, <span class="st">"Supplier"</span>,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">ifelse</span>(node_data<span class="sc">$</span>In_Degree <span class="sc">!=</span> <span class="dv">0</span>,<span class="st">"Buyer"</span>, <span class="cn">NA</span>)))</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="co">#glimpse(node_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To comprehend the range of centrality within each model, we further divide the nodes into <em>high</em>, <em>medium</em>, and <em>low</em> levels based on their centrality scores, and subsequently generate box plots to visualize the distribution of centrality scores within each group.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a custom color vector</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#FF6F61"</span>, <span class="st">"#6B5B95"</span>, <span class="st">"#88B04B"</span>, <span class="st">"#F7CAC9"</span>, <span class="st">"#92A8D1"</span>, <span class="st">"#955251"</span>, <span class="st">"#B565A7"</span>, <span class="st">"#009B77"</span>, <span class="st">"#DD4124"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the required data</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>boxplot_data <span class="ot">&lt;-</span> node_data <span class="sc">%&gt;%</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(company_label, Betweenness, In_Degree, Out_Degree) <span class="sc">%&gt;%</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>company_label, <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the boxplot</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>boxplot_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(boxplot_data, <span class="fu">aes</span>(<span class="at">x =</span> company_label, <span class="at">y =</span> value, <span class="at">fill =</span> company_label)) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"company_label"</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>boxplot_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From the boxplot analysis, the following observations can be made:</p>
+<p>- Only nodes categorized as wholesalers exhibit non-zero values in betweenness centrality. The range of betweenness centrality scores for wholesalers falls between [minimum value] and [maximum value].</p>
+<p>- Nodes categorized as suppliers have a zero in-degree centrality. Nodes categorized as buyers have a higher in-degree centrality compared to wholesalers within the same level. For instance, the in-degree centrality range for high-level buyers is from [minimum value] to [maximum value], whereas the in-degree centrality range for high-level wholesalers is from [minimum value] to [maximum value].</p>
+<p>- Nodes categorized as buyers have a zero in-degree centrality. Nodes categorized as suppliers have a higher out-degree centrality compared to wholesalers within the same level. For example, the out-degree centrality range for high-level suppliers is from [minimum value] to [maximum value], whereas the out-degree centrality range for high-level wholesalers is from [minimum value] to [maximum value].</p>
+<p>For the subsequent analysis, we will simplify the node categorization into three basic models: wholesalers, buyers, and suppliers, in order to avoid excessive grouping and maintain focus on the fundamental classification.</p>
+</section>
+<section id="data-preparation-_-data-feature-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation-_-data-feature-extraction">2.3.5 Data Preparation _ Data Feature Extraction</h3>
+<p>In this section, we will create a new data frame called “node_data_feature” to consolidate the features obtained from previous analyses. This data frame will incorporate information regarding the nodes’ running_year_category, HScode_category, and company_label (wholesaler, supplier, or buyer), thereby enabling further subgrouping of the nodes based on these features.</p>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>node_data_feature <span class="ot">&lt;-</span> node_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aggregate_data_HScode <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(company, HScode_category), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ID"</span> <span class="ot">=</span> <span class="st">"company"</span>))  <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aggregate_data_Year <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(company, running_year_category), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ID"</span> <span class="ot">=</span> <span class="st">"company"</span>)) </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(node_data_feature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,130
+Columns: 9
+$ ID                    &lt;chr&gt; "1 Limited Liability Company", "1 Ltd. Liability…
+$ Betweenness           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ In_Degree             &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ Out_Degree            &lt;dbl&gt; 1, 10, 12, 2, 3, 4, 1, 2, 9, 2, 21, 10, 5, 2, 1,…
+$ company_label         &lt;chr&gt; "supplier_low", "supplier_low", "supplier_low", …
+$ size_all              &lt;dbl&gt; 0.01063830, 0.10638298, 0.12765957, 0.02127660, …
+$ company_category      &lt;chr&gt; "Supplier", "Supplier", "Supplier", "Supplier", …
+$ HScode_category       &lt;fct&gt; &lt;=1, &gt;1, &gt;1, &gt;1, &gt;1, &gt;1, &gt;1, &gt;1, &gt;1, &lt;=1, &lt;=1, &gt;…
+$ running_year_category &lt;fct&gt; &lt;=2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2, &gt;2,…</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with NA values</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;- node_data_feature[complete.cases(node_data_feature), ]</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Company_group column and assign values based on conditions</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>node_data_feature<span class="sc">$</span>Company_group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Supplier"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Unstable_Uniform_Supplier"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Supplier"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Unstable_Diverse_Supplier"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Supplier"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Stable_Uniform_Supplier"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Supplier"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Stable_Diverse_Supplier"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>          node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Buyer"</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Unstable_Uniform_Buyer"</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>          <span class="fu">ifelse</span>(</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>            node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Buyer"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Unstable_Diverse_Buyer"</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>              node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Buyer"</span>,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Stable_Uniform_Buyer"</span>,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>              <span class="fu">ifelse</span>(</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>                node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Buyer"</span>,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Stable_Diverse_Buyer"</span>,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ifelse</span>(</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>                  node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Wholesaler"</span>,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Uniform_Wholesaler"</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                    node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&lt;=2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Wholesaler"</span>,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Unstable_Diverse_Wholesaler"</span>,</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">ifelse</span>(</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>                      node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&lt;=1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Wholesaler"</span>,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Stable_Uniform_Wholesaler"</span>,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>                        node_data_feature<span class="sc">$</span>running_year_category <span class="sc">==</span> <span class="st">"&gt;2"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>HScode_category <span class="sc">==</span> <span class="st">"&gt;1"</span> <span class="sc">&amp;</span> node_data_feature<span class="sc">$</span>company_category <span class="sc">==</span> <span class="st">"Wholesaler"</span>,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Stable_Diverse_Wholesaler"</span>,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Unknown"</span>  <span class="co"># Handling unmatched situations can be changed according to actual needs</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>                      )</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a named vector that specifies the color corresponding to each group</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>group_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Unstable_Uniform_Supplier"</span> <span class="ot">=</span> <span class="st">"red"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Diverse_Supplier"</span> <span class="ot">=</span> <span class="st">"blue"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Uniform_Supplier"</span> <span class="ot">=</span> <span class="st">"green"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Diverse_Supplier"</span> <span class="ot">=</span> <span class="st">"orange"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Uniform_Buyer"</span> <span class="ot">=</span> <span class="st">"purple"</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Diverse_Buyer"</span> <span class="ot">=</span> <span class="st">"yellow"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Uniform_Buyer"</span> <span class="ot">=</span> <span class="st">"pink"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Diverse_Buyer"</span> <span class="ot">=</span> <span class="st">"brown"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Uniform_Wholesaler"</span> <span class="ot">=</span> <span class="st">"gray"</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Unstable_Diverse_Wholesaler"</span> <span class="ot">=</span> <span class="st">"cyan"</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Uniform_Wholesaler"</span> <span class="ot">=</span> <span class="st">"magenta"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Stable_Diverse_Wholesaler"</span> <span class="ot">=</span> <span class="st">"Aquamarine"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Count Company_ Number of groups per category</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>group_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(node_data_feature<span class="sc">$</span>Company_group)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert count results into dataframe</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>group_counts_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Company_group =</span> <span class="fu">names</span>(group_counts), <span class="at">Frequency =</span> <span class="fu">as.numeric</span>(group_counts))</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw a bar chart bfor the company group</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(group_counts_df, <span class="fu">aes</span>(<span class="at">x =</span> Company_group, <span class="at">y =</span> Frequency, <span class="at">fill =</span> Company_group)) <span class="sc">+</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> group_colors) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Company Group"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Count of Company Groups"</span>) <span class="sc">+</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>To visualize the distribution of companies within these groups, a bar chart is plotted based on the company group. It is evident from the chart that the “Stable_Diverse_Supplier” group exhibits the highest percentage, followed by the “Stable_Diverse_Buyer” group. These two groups demonstrate noticeably higher percentages compared to the other groups, indicating their prominence within the network.</p>
+</section>
+</section>
+</section>
+<section id="data-visualisation" class="level1">
+<h1>3. Data Visualisation</h1>
+<section id="interactive-network-graph-with-visnetwork" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-network-graph-with-visnetwork">3.1 Interactive Network Graph with visNetwork</h2>
+<p>In this section, a network plot is generated for a subset of nodes focusing on those with a specific HScode (306170). To manage the large volume of nodes, a filter condition based on the Year variable is applied, enabling the separation of networks for different years.</p>
+<p>In the network plot, each node is assigned a color based on its company_group, allowing for a clear visualization of its distinctive features within the network. This coloring scheme facilitates the identification and interpretation of the nodes’ characteristics and facilitates the analysis of their interactions and connections.</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">2028</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">2029</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">2030</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">2031</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">2032</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">2033</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false">2034</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregating and filtering edges data</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mc2_edges_aggregated <span class="ot">&lt;-</span> mc2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hscode <span class="sc">==</span> <span class="st">"306170"</span><span class="sc">&amp;</span> Year <span class="sc">==</span> <span class="st">"2028"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">from =</span> source, <span class="at">to =</span> target, hscode, Year) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">weights =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(from <span class="sc">!=</span> to) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weights <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting unique node IDs</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>id1 <span class="ot">&lt;-</span> mc2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(from) <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> from)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>id2 <span class="ot">&lt;-</span> mc2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(to) <span class="sc">%&gt;%</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> to)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> <span class="fu">rbind</span>(id1, id2) <span class="sc">%&gt;%</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Joining extracted nodes with company data to add running_year_category information</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> mc2_nodes_extracted <span class="sc">%&gt;%</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(node_data_feature <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(ID, size_all, Company_group), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"id"</span> <span class="ot">=</span> <span class="st">"ID"</span>)) </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> mc2_nodes_extracted <span class="sc">%&gt;%</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">group =</span> Company_group)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network graph using visNetwork</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">visNetwork</span>(<span class="at">nodes =</span> mc2_nodes_extracted, <span class="at">edges =</span> mc2_edges_aggregated,<span class="at">height =</span> <span class="st">"500px"</span>, <span class="at">width =</span> <span class="st">"100%"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visNodes</span>(<span class="at">size =</span><span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">highlight =</span> <span class="st">"lightgray"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visOptions</span>(<span class="at">selectedBy =</span> <span class="st">"group"</span>,</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>             <span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">degree =</span> <span class="dv">1</span>,</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">hover =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">labelOnly =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>             <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visInteraction</span>(<span class="at">navigationButtons =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>)</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="htmlwidget-336484db2f9372dfe76e" style="width:100%;height:500px;" class="visNetwork html-widget "></div>
+<script type="application/json" data-for="htmlwidget-336484db2f9372dfe76e">{"x":{"nodes":{"id":["1 Ltd. Liability Co Cargo","Adriatic Catch Ltd. Liability Co Transportation","Adriatic Tuna AS Solutions","Amerigo Dockyard S.p.A. Distribution","Aqua Adventures Carriers Seabed","Aqua Azul LC International","Arunachal Pradesh s Plc","Balkan Cat ОАО Transport","Bay of Bengal's Corp","Blue Horizon Family &","Chuan gou  N.V. Delivery","CoralCove Foods AG Marine conservation","Costa del Mar Ges.m.b.H. Marine biology","Costa del Viento A/S Freight ","Daniel Ferry N.V. Transit","Danish Plaice BV Investment","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Dutch Bill  Marine mist NV Freight ","Dutch Eel AB Holdings","Finests  Salmon Ltd Marine ecology","French  Seabed S.p.A. Forwading","Haryana s Plc Transit","Irish Scallop Corporation Transport","Italian Sardines Ltd. Liability Co","Lake Tana  & Son's","Ltd. Corporation Ltd. Liability Co","Manipur  Market Corporation Cargo","Mar de la Costa Sagl","Mar de la Felicidad BV","Mar de la Felicidad NV","Mar de la Vida S.p.A.","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Neptune's Realm NV Navigation","Noord Limited Liability Company Line","Náutica del Sol Brothers","Ob River Ltd. Liability Co","Ocean Emporium Pic Holdings","Ocean Outfitters Ltd. Corporation","Oceanfront Oases Co Shipping","Oceanfront Oasis Company Green ","Perla del Mar BV","Perla del Mar Deep-sea","Playa de Arena OJSC Express","Playa del Mar Corporation","ReefRider Foods S.p.A. Cargo","Richard S.A. de C.V. Solutions","Rift Valley fishery Sagl","Rufiji River  Ges.m.b.H. Family","Saltwater Sirens Limited Liability Company Marine conservation","SeaBass  Ltd. Liability Co Consulting","Selous Game Reserve  AB","Spanish Shrimp A/S Marine","Surf and Sea Marine","Tamil Nadu s Barge","The Sea Lion Corporation","Tripura  Market S.A. de C.V.","Tristen Jetty Company Solutions","Turkish Sword NV Ocean","Uttar Pradesh Sea  A/S Express","Viento Azul N.V. Distribution","Viento y Mar BV","Wave Watchers Ltd. Liability Co","bǐ mù yú AG Marine","bǐ mù yú Sagl Distribution","guī yú Ltd. Corporation","qīng yú Ltd. Corporation","shí rén yú Marine conservation","suō yú GmbH & Co. KG Freight ","xiǎo lóng xiā SRL","Himachal Pradesh  BV Holdings","The Sea Turtle GmbH & Co. KG","AquaDelight N.V. Coral Reef","Caracola del Sol Services","Shou gan  Limited Liability Company Distribution","Caracola del Este Ltd. Liability Co","Casablanca Coast  Flounder Oyj Line","Lake Turkana  Charter Boat  NV Marine","Sea Breeze Corporation Marine sanctuary","-5669","-5670","Arunachal Pradesh s Brine","Costa de la Felicidad Shipping","Mar del Este CJSC","Dubingiai Ltd. Liability Co","Coastal Castaway Coast Corporation Worldwide","Madagascar Coast  AG Freight ","Mar del Paraíso Corporation Logistics","Selous Game Reserve  S.A. de C.V.","hǎi dǎn AG Express","hǎi dǎn Corporation Wharf","hǎi mǎ Sagl Express","SeaLion Marine AG Express","Punjab s Marine conservation","Pao gan SE Seal","Arena del Mar Marine Marine biology","Maharashtra  Ltd. Liability Co Shipping","Saltwater Supreme Pelican Ltd Enterprises","West Bengal   OJSC Transport","Tripura  Pier N.V. Solutions","Mar del Placer Manatee","3 Oceanography ОАО Marine life","Water Wonders AG Transport","Rybachit Sagl and Son's","-1363","Kilimanjaro fishery Ltd. Corporation Carriers","-1539","Coral Cove BV Delivery","Isla del Tesoro GmbH & Co. KG Chart","Pao gan LC Freight ","Brisa del Este BV","Playa de Arena SE Underwater","Yu xian  SRL Industrial","Black Sea Tuna Snapper","Mar de la Luz Plc","Assam  Market Cargo ship Company Marine conservation","Sailors and Surfers Incorporated Enterprises","-1203","Mar de Plata BV Marine","Selkie Ltd. Liability Co"],"size_all":[0.106382978723404,0.223404255319149,0.106382978723404,0.0196078431372549,0.223404255319149,0.223404255319149,0.127659574468085,0.787234042553192,0.127659574468085,0.808510638297872,0.287234042553192,0.234042553191489,0.0851063829787234,0.127659574468085,0.404255319148936,0.074468085106383,0.191489361702128,0.0957446808510638,0.0212765957446809,0.223404255319149,0.0319148936170213,0.202127659574468,0.0531914893617021,0.0212765957446809,0.297872340425532,0.563829787234043,0.0196078431372549,0.25531914893617,0.148936170212766,0.0425531914893617,0.0319148936170213,0.393617021276596,0.180851063829787,0.0638297872340425,0.0851063829787234,0.361702127659574,0.117021276595745,0.0425531914893617,0.0425531914893617,0.0319148936170213,0.138297872340426,0.074468085106383,0.340425531914894,0.170212765957447,0.170212765957447,0.457446808510638,0.627659574468085,0.287234042553192,0.0531914893617021,0.0957446808510638,0.212765957446809,0.106382978723404,0.0425531914893617,0.0638297872340425,0.138297872340426,0.340425531914894,0.319148936170213,0.234042553191489,0.0531914893617021,0.340425531914894,0.127659574468085,0.127659574468085,0.0425531914893617,0.308510638297872,0.074468085106383,0.24468085106383,0.0106382978723404,0.074468085106383,0.0531914893617021,0.0106382978723404,0.0957446808510638,0.0531914893617021,0.0319148936170213,0.0368421052631579,0.134210526315789,0.239473684210526,0.723684210526316,0.0105263157894737,0.126315789473684,0.313725490196078,0.0526315789473684,0.118421052631579,0.00526315789473684,0.00789473684210526,0.15,0.505263157894737,1,0.0236842105263158,0.0289473684210526,0.255263157894737,0.115789473684211,0.344736842105263,0.0578947368421053,0.881578947368421,0.0157894736842105,0.00789473684210526,0.0894736842105263,0.542105263157895,0.0605263157894737,0.0578947368421053,0.123684210526316,0.00263157894736842,0.068421052631579,0.0973684210526316,0.173684210526316,0.0196078431372549,0.0263157894736842,0.0157894736842105,0.00263157894736842,0.00789473684210526,0.0263157894736842,0.0552631578947368,0.178947368421053,0.134210526315789,0.00263157894736842,0.171052631578947,0.0657894736842105,0.00263157894736842,0.0842105263157895,0.160526315789474,0.00263157894736842,0.00526315789473684,0.0131578947368421],"group":["Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Wholesaler","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Wholesaler","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Unstable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Wholesaler","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Uniform_Buyer","Stable_Uniform_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Wholesaler","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Unstable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer","Stable_Diverse_Buyer"],"x":[-0.497541151185767,-0.581941072974102,0.23801835097864,-0.902705390660867,-0.0892069766724946,-0.566345421488819,0.907161392934299,0.144170506115589,0.546933683222548,-0.244472625653205,0.544542799343119,0.219782803918262,0.493647020173748,0.20186306964465,0.59777149584973,0.614024004178115,-0.275167917475495,-0.0427048710452661,0.705022092203582,-0.211200555941142,0.60151057002798,0.273162305326724,0.352475033447486,-0.295195508990486,0.646988812556418,0.0302114148479828,0.1132287197116,-0.0739647845710688,1,0.196288696111115,-0.781321491438024,-0.321336338224179,0.0745312064846193,0.057217168909129,-0.0164466666751545,0.270682256493644,-0.484846844621592,-0.957836442300263,0.629172197856964,0.0396659976850695,-0.421125927322527,-0.472146971456731,0.134586243009229,0.257690233862552,0.52597041989023,-0.113541871221615,0.205107436764845,-0.4518548192884,0.686109952579096,0.593954691097785,0.65406750364265,-0.0979573312894539,-0.196951382154222,0.148263542779853,0.658402566159631,0.0850932360244656,0.552775861526208,-0.507573668288709,-0.606116555113356,-0.128580285528526,-0.450157121071173,-0.387655047654024,-0.0708826589932743,0.718778275023672,0.0801531879345092,-0.164310148059057,-0.00253521229721099,0.255697564864724,-0.388494005690138,-1,-0.0444044871218152,-0.201895641006207,-0.0686116737052309,-0.394362975009786,-0.40205694014291,0.381631339680988,0.0321792410660615,-0.935460830969196,0.244382107767389,-0.248715640118472,-0.37368480720664,0.0499031024033583,-0.744221271470143,-0.64861809872989,-0.745265540459836,-0.721548834634817,-0.249626988515886,0.747431608213293,0.255321618974617,-0.173061504450776,-0.0139563510781395,0.11004630453433,0.185715387031825,0.0340439821973384,0.331990264371742,0.750020070313374,0.0643605942697163,0.515901872690365,-0.490516219138514,-0.0413920926966788,0.452467415521348,0.388110055554794,0.183463945674373,-0.191738138282921,0.972728329396873,-0.792003341130102,-0.474503533475902,-0.918224813087728,-0.0487019470465492,-0.67387608576861,0.133604184388078,0.520272843846767,0.251714976554316,-0.398874758083054,-0.652973369428136,0.717847455371988,0.6480428744694,-0.650050751538598,0.874658866175279,-0.193060719885401,0.345350011558526,-0.989692971093545,-0.27057290873284],"y":[-0.917202476445294,-0.644339341139428,-0.273397829581558,-0.445298891209979,0.00771727141517453,0.0859824256998223,0.0253923151054325,0.00724070427077184,-0.330867071934899,-0.333485464970128,-0.121572687042457,-0.463246882000275,-0.431740372072619,-0.628860819710597,-0.401489628755814,0.436428628409645,-0.249197528704403,-0.752466439869723,0.382233562449731,-0.59068091730148,0.206441057577603,-0.435193067642037,-0.35270113788425,-1,0.0748290063681443,-0.220126976451387,0.262432376649612,0.139097700761087,-0.224779097892503,0.621444183546752,0.61146788372723,0.251874413566204,-0.377674974736622,-0.637685378184274,-0.673193024604414,-0.0460813836500069,0.906781192665305,0.291635280957945,-0.306819572886787,1,0.165408547932256,-0.14893634142994,0.61118431547014,0.564257616394572,0.553323549012691,-0.43156720970842,-0.0627545147729026,-0.32028869433279,0.761901379582172,-0.224434981302146,-0.78890258149869,-0.624393552586709,-0.370730256609173,-0.677963899890058,0.517365339889061,0.00791899320004874,-0.508758227503157,-0.720768495532896,0.652518244277827,-0.0643410676112389,0.0680273795419011,0.786771929440415,0.501237566280019,0.141308561575902,-0.720794238384732,0.258688204832331,0.341765417761073,0.976110438907931,-0.213680653934978,-0.00360495853435228,0.589127130287153,0.915453366593102,-0.295020950429085,-0.957607821025247,-0.585360961636237,-0.256904923305441,-0.16247511698916,-0.352949435596701,-0.146088202059754,0.146864050490089,-0.0483768679522228,0.131190361471444,0.118102368418247,0.261715672999623,0.0282153949734163,0.202434674899303,-0.00567880902084306,0.00493436329082542,0.207503712668954,-0.186560582953484,0.0267045854876757,0.416307271869227,0.346316841857532,-0.435706976917714,0.156804459032031,-0.148637078348687,-0.519390748579505,0.321337157800163,-0.379051382536223,-0.934115614486909,0.0839049408964754,-0.641868940653174,-0.206793204016897,0.362542993520451,-0.322728711143299,0.524941858720641,0.814774289408357,0.380487346038031,0.995119031291759,-0.173455998494236,0.784226691413724,0.715106071692698,0.0704723040918149,-0.455183088778235,-0.389284887636512,0.65216102543464,-0.666315433000519,0.734457583304222,0.222343019367883,0.507048310357506,0.944365812911639,-0.102360744093414,0.969701665305806],"label":["1 Ltd. Liability Co Cargo","Adriatic Catch Ltd. Liability Co Transportation","Adriatic Tuna AS Solutions","Amerigo Dockyard S.p.A. Distribution","Aqua Adventures Carriers Seabed","Aqua Azul LC International","Arunachal Pradesh s Plc","Balkan Cat ОАО Transport","Bay of Bengal's Corp","Blue Horizon Family &","Chuan gou  N.V. Delivery","CoralCove Foods AG Marine conservation","Costa del Mar Ges.m.b.H. Marine biology","Costa del Viento A/S Freight ","Daniel Ferry N.V. Transit","Danish Plaice BV Investment","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Dutch Bill  Marine mist NV Freight ","Dutch Eel AB Holdings","Finests  Salmon Ltd Marine ecology","French  Seabed S.p.A. Forwading","Haryana s Plc Transit","Irish Scallop Corporation Transport","Italian Sardines Ltd. Liability Co","Lake Tana  & Son's","Ltd. Corporation Ltd. Liability Co","Manipur  Market Corporation Cargo","Mar de la Costa Sagl","Mar de la Felicidad BV","Mar de la Felicidad NV","Mar de la Vida S.p.A.","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Neptune's Realm NV Navigation","Noord Limited Liability Company Line","Náutica del Sol Brothers","Ob River Ltd. Liability Co","Ocean Emporium Pic Holdings","Ocean Outfitters Ltd. Corporation","Oceanfront Oases Co Shipping","Oceanfront Oasis Company Green ","Perla del Mar BV","Perla del Mar Deep-sea","Playa de Arena OJSC Express","Playa del Mar Corporation","ReefRider Foods S.p.A. Cargo","Richard S.A. de C.V. Solutions","Rift Valley fishery Sagl","Rufiji River  Ges.m.b.H. Family","Saltwater Sirens Limited Liability Company Marine conservation","SeaBass  Ltd. Liability Co Consulting","Selous Game Reserve  AB","Spanish Shrimp A/S Marine","Surf and Sea Marine","Tamil Nadu s Barge","The Sea Lion Corporation","Tripura  Market S.A. de C.V.","Tristen Jetty Company Solutions","Turkish Sword NV Ocean","Uttar Pradesh Sea  A/S Express","Viento Azul N.V. Distribution","Viento y Mar BV","Wave Watchers Ltd. Liability Co","bǐ mù yú AG Marine","bǐ mù yú Sagl Distribution","guī yú Ltd. Corporation","qīng yú Ltd. Corporation","shí rén yú Marine conservation","suō yú GmbH & Co. KG Freight ","xiǎo lóng xiā SRL","Himachal Pradesh  BV Holdings","The Sea Turtle GmbH & Co. KG","AquaDelight N.V. Coral Reef","Caracola del Sol Services","Shou gan  Limited Liability Company Distribution","Caracola del Este Ltd. Liability Co","Casablanca Coast  Flounder Oyj Line","Lake Turkana  Charter Boat  NV Marine","Sea Breeze Corporation Marine sanctuary","-5669","-5670","Arunachal Pradesh s Brine","Costa de la Felicidad Shipping","Mar del Este CJSC","Dubingiai Ltd. Liability Co","Coastal Castaway Coast Corporation Worldwide","Madagascar Coast  AG Freight ","Mar del Paraíso Corporation Logistics","Selous Game Reserve  S.A. de C.V.","hǎi dǎn AG Express","hǎi dǎn Corporation Wharf","hǎi mǎ Sagl Express","SeaLion Marine AG Express","Punjab s Marine conservation","Pao gan SE Seal","Arena del Mar Marine Marine biology","Maharashtra  Ltd. Liability Co Shipping","Saltwater Supreme Pelican Ltd Enterprises","West Bengal   OJSC Transport","Tripura  Pier N.V. Solutions","Mar del Placer Manatee","3 Oceanography ОАО Marine life","Water Wonders AG Transport","Rybachit Sagl and Son's","-1363","Kilimanjaro fishery Ltd. Corporation Carriers","-1539","Coral Cove BV Delivery","Isla del Tesoro GmbH & Co. KG Chart","Pao gan LC Freight ","Brisa del Este BV","Playa de Arena SE Underwater","Yu xian  SRL Industrial","Black Sea Tuna Snapper","Mar de la Luz Plc","Assam  Market Cargo ship Company Marine conservation","Sailors and Surfers Incorporated Enterprises","-1203","Mar de Plata BV Marine","Selkie Ltd. Liability Co"]},"edges":{"from":["1 Ltd. Liability Co Cargo","Adriatic Catch Ltd. Liability Co Transportation","Adriatic Tuna AS Solutions","Adriatic Tuna AS Solutions","Amerigo Dockyard S.p.A. Distribution","Aqua Adventures Carriers Seabed","Aqua Adventures Carriers Seabed","Aqua Adventures Carriers Seabed","Aqua Adventures Carriers Seabed","Aqua Azul LC International","Aqua Azul LC International","Aqua Azul LC International","Aqua Azul LC International","Aqua Azul LC International","Aqua Azul LC International","Arunachal Pradesh s Plc","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Balkan Cat ОАО Transport","Bay of Bengal's Corp","Blue Horizon Family &","Blue Horizon Family &","Blue Horizon Family &","Blue Horizon Family &","Chuan gou  N.V. Delivery","Chuan gou  N.V. Delivery","Chuan gou  N.V. Delivery","Chuan gou  N.V. Delivery","CoralCove Foods AG Marine conservation","CoralCove Foods AG Marine conservation","CoralCove Foods AG Marine conservation","Costa del Mar Ges.m.b.H. Marine biology","Costa del Viento A/S Freight ","Daniel Ferry N.V. Transit","Danish Plaice BV Investment","Danish Plaice Ltd. Liability Co Logistics","Danish Plaice Ltd. Liability Co Logistics","Danish Plaice Ltd. Liability Co Logistics","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Donald Sp & Son's","Dutch Bill  Marine mist NV Freight ","Dutch Eel AB Holdings","Dutch Eel AB Holdings","Finests  Salmon Ltd Marine ecology","French  Seabed S.p.A. Forwading","French  Seabed S.p.A. Forwading","French  Seabed S.p.A. Forwading","Haryana s Plc Transit","Irish Scallop Corporation Transport","Italian Sardines Ltd. Liability Co","Italian Sardines Ltd. Liability Co","Lake Tana  & Son's","Lake Tana  & Son's","Lake Tana  & Son's","Lake Tana  & Son's","Lake Tana  & Son's","Ltd. Corporation Ltd. Liability Co","Manipur  Market Corporation Cargo","Manipur  Market Corporation Cargo","Manipur  Market Corporation Cargo","Mar de la Costa Sagl","Mar de la Felicidad BV","Mar de la Felicidad NV","Mar de la Vida S.p.A.","Mar de la Vida S.p.A.","Mar del Oeste Cruise ship","Mar del Oeste Cruise ship","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Michael Ltd. Corporation Seal","Michael Ltd. Corporation Seal","Michael Ltd. Corporation Seal","Michael Ltd. Corporation Seal","Michael Ltd. Corporation Seal","Neptune's Realm NV Navigation","Noord Limited Liability Company Line","Náutica del Sol Brothers","Ob River Ltd. Liability Co","Ocean Emporium Pic Holdings","Ocean Outfitters Ltd. Corporation","Ocean Outfitters Ltd. Corporation","Ocean Outfitters Ltd. Corporation","Oceanfront Oases Co Shipping","Oceanfront Oases Co Shipping","Oceanfront Oasis Company Green ","Perla del Mar BV","Perla del Mar BV","Perla del Mar Deep-sea","Perla del Mar Deep-sea","Playa de Arena OJSC Express","Playa de Arena OJSC Express","Playa de Arena OJSC Express","Playa de Arena OJSC Express","Playa del Mar Corporation","Playa del Mar Corporation","Playa del Mar Corporation","ReefRider Foods S.p.A. Cargo","Richard S.A. de C.V. Solutions","Rift Valley fishery Sagl","Rufiji River  Ges.m.b.H. Family","Saltwater Sirens Limited Liability Company Marine conservation","Saltwater Sirens Limited Liability Company Marine conservation","SeaBass  Ltd. Liability Co Consulting","Selous Game Reserve  AB","Selous Game Reserve  AB","Spanish Shrimp A/S Marine","Spanish Shrimp A/S Marine","Spanish Shrimp A/S Marine","Spanish Shrimp A/S Marine","Spanish Shrimp A/S Marine","Spanish Shrimp A/S Marine","Surf and Sea Marine","Surf and Sea Marine","Tamil Nadu s Barge","The Sea Lion Corporation","Tripura  Market S.A. de C.V.","Tripura  Market S.A. de C.V.","Tripura  Market S.A. de C.V.","Tristen Jetty Company Solutions","Turkish Sword NV Ocean","Uttar Pradesh Sea  A/S Express","Uttar Pradesh Sea  A/S Express","Viento Azul N.V. Distribution","Viento Azul N.V. Distribution","Viento Azul N.V. Distribution","Viento y Mar BV","Wave Watchers Ltd. Liability Co","Wave Watchers Ltd. Liability Co","Wave Watchers Ltd. Liability Co","bǐ mù yú AG Marine","bǐ mù yú Sagl Distribution","guī yú Ltd. Corporation","qīng yú Ltd. Corporation","shí rén yú Marine conservation","shí rén yú Marine conservation","suō yú GmbH & Co. KG Freight ","xiǎo lóng xiā SRL"],"to":["Himachal Pradesh  BV Holdings","The Sea Turtle GmbH & Co. KG","AquaDelight N.V. Coral Reef","Caracola del Sol Services","Shou gan  Limited Liability Company Distribution","Caracola del Este Ltd. Liability Co","Casablanca Coast  Flounder Oyj Line","Lake Turkana  Charter Boat  NV Marine","Sea Breeze Corporation Marine sanctuary","-5669","-5670","Arunachal Pradesh s Brine","Costa de la Felicidad Shipping","Lake Turkana  Charter Boat  NV Marine","Mar del Este CJSC","Dubingiai Ltd. Liability Co","AquaDelight N.V. Coral Reef","Caracola del Este Ltd. Liability Co","Coastal Castaway Coast Corporation Worldwide","Madagascar Coast  AG Freight ","Mar del Paraíso Corporation Logistics","Selous Game Reserve  S.A. de C.V.","hǎi dǎn AG Express","hǎi dǎn Corporation Wharf","hǎi mǎ Sagl Express","AquaDelight N.V. Coral Reef","Madagascar Coast  AG Freight ","Mar del Este CJSC","The Sea Turtle GmbH & Co. KG","hǎi dǎn Corporation Wharf","AquaDelight N.V. Coral Reef","Caracola del Este Ltd. Liability Co","Dubingiai Ltd. Liability Co","SeaLion Marine AG Express","AquaDelight N.V. Coral Reef","Punjab s Marine conservation","hǎi dǎn Corporation Wharf","AquaDelight N.V. Coral Reef","hǎi dǎn Corporation Wharf","AquaDelight N.V. Coral Reef","Pao gan SE Seal","Arena del Mar Marine Marine biology","Lake Turkana  Charter Boat  NV Marine","Mar del Este CJSC","hǎi dǎn Corporation Wharf","Maharashtra  Ltd. Liability Co Shipping","hǎi dǎn Corporation Wharf","Pao gan SE Seal","The Sea Turtle GmbH & Co. KG","hǎi dǎn Corporation Wharf","Saltwater Supreme Pelican Ltd Enterprises","Caracola del Este Ltd. Liability Co","West Bengal   OJSC Transport","hǎi dǎn Corporation Wharf","Tripura  Pier N.V. Solutions","Himachal Pradesh  BV Holdings","Dubingiai Ltd. Liability Co","Saltwater Supreme Pelican Ltd Enterprises","AquaDelight N.V. Coral Reef","Madagascar Coast  AG Freight ","Mar del Este CJSC","Tripura  Pier N.V. Solutions","hǎi dǎn Corporation Wharf","Selous Game Reserve  S.A. de C.V.","Caracola del Sol Services","Mar del Placer Manatee","Sea Breeze Corporation Marine sanctuary","3 Oceanography ОАО Marine life","Selous Game Reserve  S.A. de C.V.","Water Wonders AG Transport","Mar del Este CJSC","Mar del Placer Manatee","Caracola del Sol Services","Punjab s Marine conservation","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","AquaDelight N.V. Coral Reef","Caracola del Sol Services","Pao gan SE Seal","Saltwater Supreme Pelican Ltd Enterprises","Sea Breeze Corporation Marine sanctuary","hǎi dǎn Corporation Wharf","Rybachit Sagl and Son's","-1363","AquaDelight N.V. Coral Reef","Kilimanjaro fishery Ltd. Corporation Carriers","Mar del Este CJSC","-1539","Lake Turkana  Charter Boat  NV Marine","Madagascar Coast  AG Freight ","Coral Cove BV Delivery","hǎi dǎn AG Express","Selous Game Reserve  S.A. de C.V.","Isla del Tesoro GmbH & Co. KG Chart","Pao gan SE Seal","Madagascar Coast  AG Freight ","Punjab s Marine conservation","AquaDelight N.V. Coral Reef","Caracola del Sol Services","Pao gan LC Freight ","Sea Breeze Corporation Marine sanctuary","Brisa del Este BV","Madagascar Coast  AG Freight ","Playa de Arena SE Underwater","Yu xian  SRL Industrial","AquaDelight N.V. Coral Reef","Black Sea Tuna Snapper","hǎi dǎn Corporation Wharf","Brisa del Este BV","Caracola del Sol Services","hǎi dǎn Corporation Wharf","Pao gan SE Seal","Yu xian  SRL Industrial","Ltd. Corporation Ltd. Liability Co","Madagascar Coast  AG Freight ","Mar del Este CJSC","Pao gan LC Freight ","Saltwater Supreme Pelican Ltd Enterprises","Tripura  Pier N.V. Solutions","AquaDelight N.V. Coral Reef","Black Sea Tuna Snapper","The Sea Turtle GmbH & Co. KG","Mar de la Luz Plc","Caracola del Sol Services","Mar del Este CJSC","Mar del Paraíso Corporation Logistics","Mar del Este CJSC","Rybachit Sagl and Son's","Mar del Placer Manatee","Selous Game Reserve  S.A. de C.V.","Assam  Market Cargo ship Company Marine conservation","Dubingiai Ltd. Liability Co","Saltwater Supreme Pelican Ltd Enterprises","hǎi dǎn Corporation Wharf","Mar del Este CJSC","Sailors and Surfers Incorporated Enterprises","Sea Breeze Corporation Marine sanctuary","Sea Breeze Corporation Marine sanctuary","-1203","Madagascar Coast  AG Freight ","Mar de Plata BV Marine","Sailors and Surfers Incorporated Enterprises","Selous Game Reserve  S.A. de C.V.","Selkie Ltd. Liability Co","Caracola del Sol Services"],"hscode":["306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170"],"Year":[2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028],"weights":[68,30,22,21,42,80,23,42,46,54,21,234,30,33,22,28,126,31,23,36,66,36,62,29,37,54,61,21,23,45,63,182,24,24,64,89,44,40,73,176,95,34,65,21,134,50,29,25,191,80,24,42,22,35,120,68,28,50,101,49,40,25,39,83,246,127,59,25,49,80,43,22,135,35,26,26,173,21,26,34,36,32,27,183,73,96,21,64,35,41,57,41,82,63,28,44,70,115,23,30,36,27,79,40,37,24,36,41,62,25,46,59,63,26,125,72,26,90,55,36,122,22,57,30,23,22,21,204,260,36,74,21,37,28,36,456,67,25,35,33,32,164,32,44,58,30]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false,"size":50},"manipulation":{"enabled":false},"edges":{"smooth":false,"color":{"highlight":"lightgray"}},"physics":{"stabilization":false},"interaction":{"hover":true,"navigationButtons":true,"zoomSpeed":1},"layout":{"randomSeed":123}},"groups":["Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Wholesaler","Unstable_Diverse_Supplier","Stable_Diverse_Buyer","Stable_Uniform_Buyer","Unstable_Diverse_Buyer"],"width":"100%","height":"500px","idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":true,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false,"variable":"group","main":"Select by group","values":["Stable_Diverse_Buyer","Stable_Diverse_Supplier","Stable_Diverse_Wholesaler","Stable_Uniform_Buyer","Stable_Uniform_Supplier","Unstable_Diverse_Buyer","Unstable_Diverse_Supplier"]},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div class="cell">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="ego-network-for-key-node" class="level2">
+<h2 class="anchored" data-anchor-id="ego-network-for-key-node">3.2 Ego-Network for Key Node</h2>
+<p>For further analysis of key node connections, an ego-net approach is employed to examine the connections of a specific node, namely “hǎi dǎn Corporation Wharf,” which has been identified based on the previous section’s analysis. The selection of this node is driven by its numerous short-running year connections, suggesting potential significance and relevance in the network structure. By focusing on the ego-net of Hai Dan Corporation, we can gain deeper insights into its immediate connections and study its specific role and influence within the network.</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">2028</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">2029</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">2030</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">2031</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">2032</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false">2033</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false">2034</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<details>
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregating and filtering edges data</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mc2_edges_aggregated <span class="ot">&lt;-</span> mc2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hscode <span class="sc">==</span> <span class="st">"306170"</span><span class="sc">&amp;</span> Year <span class="sc">==</span> <span class="st">"2028"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">from =</span> source, <span class="at">to =</span> target, hscode, Year) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">weights =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(from <span class="sc">!=</span> to) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weights <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting unique node IDs</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>id1 <span class="ot">&lt;-</span> mc2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(from) <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> from)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>id2 <span class="ot">&lt;-</span> mc2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(to) <span class="sc">%&gt;%</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> to)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> <span class="fu">rbind</span>(id1, id2) <span class="sc">%&gt;%</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Joining extracted nodes with company data to add running_year_category information</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> mc2_nodes_extracted <span class="sc">%&gt;%</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(node_data_feature <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(ID, size_all, Company_group), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"id"</span> <span class="ot">=</span> <span class="st">"ID"</span>)) </span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>mc2_nodes_extracted <span class="ot">&lt;-</span> mc2_nodes_extracted <span class="sc">%&gt;%</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">group =</span> Company_group)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>ego_edges <span class="ot">&lt;-</span> mc2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(from <span class="sc">==</span> <span class="st">"hǎi dǎn Corporation Wharf"</span> <span class="sc">|</span> to <span class="sc">==</span> <span class="st">"hǎi dǎn Corporation Wharf"</span>)</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract unique node IDs from ego_edges</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>ego_node_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(ego_edges<span class="sc">$</span>from, ego_edges<span class="sc">$</span>to))</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter ego_nodes using the unique node IDs</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>ego_nodes <span class="ot">&lt;-</span> mc2_nodes_extracted <span class="sc">%&gt;%</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">%in%</span> ego_node_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">node_id =</span> <span class="fu">row_number</span>())</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Update ego_edges with the corresponding node IDs</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>ego_edges <span class="ot">&lt;-</span> ego_edges <span class="sc">%&gt;%</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ego_nodes <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, node_id), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"from"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">from_node =</span> node_id) <span class="sc">%&gt;%</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ego_nodes <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, node_id), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"to"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">to_node =</span> node_id)</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="fu">visNetwork</span>(<span class="at">nodes =</span> ego_nodes, <span class="at">edges =</span> ego_edges, <span class="at">height =</span> <span class="st">"500px"</span>, <span class="at">width =</span> <span class="st">"100%"</span> ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visIgraphLayout</span>(<span class="at">layout =</span> <span class="st">"layout_with_fr"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visNodes</span>(<span class="at">size =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visEdges</span>(<span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="fu">visEdges</span>(<span class="at">color =</span> <span class="fu">list</span>(<span class="at">highlight =</span> <span class="st">"lightgray"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a> <span class="fu">visOptions</span>(<span class="at">selectedBy =</span> <span class="st">"group"</span>,</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>             <span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">degree =</span> <span class="dv">1</span>,</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">hover =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">labelOnly =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>             <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visInteraction</span>(<span class="at">navigationButtons =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="htmlwidget-13b9f57da4850b91c8f8" style="width:100%;height:500px;" class="visNetwork html-widget "></div>
+<script type="application/json" data-for="htmlwidget-13b9f57da4850b91c8f8">{"x":{"nodes":{"id":["Balkan Cat ОАО Transport","Blue Horizon Family &","CoralCove Foods AG Marine conservation","Costa del Viento A/S Freight ","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Dutch Eel AB Holdings","French  Seabed S.p.A. Forwading","Lake Tana  & Son's","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Rufiji River  Ges.m.b.H. Family","SeaBass  Ltd. Liability Co Consulting","Viento y Mar BV","hǎi dǎn Corporation Wharf"],"size_all":[0.787234042553192,0.808510638297872,0.234042553191489,0.127659574468085,0.191489361702128,0.0957446808510638,0.223404255319149,0.202127659574468,0.563829787234043,0.180851063829787,0.0638297872340425,0.0851063829787234,0.361702127659574,0.106382978723404,0.0638297872340425,0.074468085106383,0.881578947368421],"group":["Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Supplier","Stable_Diverse_Buyer"],"node_id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"x":[-0.111544495040304,-0.993911344864141,0.938402742884075,0.743563888720835,0.090294258213109,0.429546475768278,0.391436438199847,1,-1,-0.260787525961895,-0.421791797822052,0.369078142169089,-0.847784463903433,-0.565343883041719,0.899813798590054,-0.971728790154917,-0.0211994908473001],"y":[1,-0.107461468870002,0.128052270224893,-0.606976543858105,-0.621596759489173,0.941059690635546,-0.950335328980463,-0.269187466327213,0.278656253094432,-1,0.703077844962624,0.507339068535273,0.678143549066977,-0.662137501214602,0.564203523741728,-0.519780321657337,0.00549308332689025],"label":["Balkan Cat ОАО Transport","Blue Horizon Family &","CoralCove Foods AG Marine conservation","Costa del Viento A/S Freight ","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Dutch Eel AB Holdings","French  Seabed S.p.A. Forwading","Lake Tana  & Son's","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Rufiji River  Ges.m.b.H. Family","SeaBass  Ltd. Liability Co Consulting","Viento y Mar BV","hǎi dǎn Corporation Wharf"]},"edges":{"from":["Balkan Cat ОАО Transport","Blue Horizon Family &","CoralCove Foods AG Marine conservation","Costa del Viento A/S Freight ","Danish Plaice Ltd. Liability Co Logistics","Donald Sp & Son's","Dutch Eel AB Holdings","French  Seabed S.p.A. Forwading","Lake Tana  & Son's","Mar del Oeste Cruise ship","Mar del Placer CJSC Transport","Marine Masterminds SE Saltwater","Michael Ltd. Corporation Seal","Rufiji River  Ges.m.b.H. Family","SeaBass  Ltd. Liability Co Consulting","Viento y Mar BV"],"to":["hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf","hǎi dǎn Corporation Wharf"],"hscode":["306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170","306170"],"Year":[2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028,2028],"weights":[29,45,44,73,134,29,80,35,39,26,26,173,27,62,59,36],"from_node":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],"to_node":[17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false,"size":20},"manipulation":{"enabled":false},"edges":{"smooth":false,"color":{"highlight":"lightgray"}},"physics":{"stabilization":false},"interaction":{"hover":true,"navigationButtons":true,"zoomSpeed":1},"layout":{"randomSeed":123}},"groups":["Stable_Diverse_Supplier","Stable_Uniform_Supplier","Stable_Diverse_Buyer"],"width":"100%","height":"500px","idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":true,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false,"variable":"group","main":"Select by group","values":["Stable_Diverse_Buyer","Stable_Diverse_Supplier","Stable_Uniform_Supplier"]},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<div class="cell">
+
+</div>
+</div>
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
+<div class="cell">
+
+</div>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li><p>Future Work</p></li>
+<li><p>Reference</p></li>
+</ol>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
