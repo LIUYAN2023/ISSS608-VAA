@@ -26,7 +26,7 @@ This exercise source is from: [Mini-Challenge 2 task 1](https://vast-challenge.g
 The code chunk below uses pacman::p_load() to check if packages are installed. If they are, they will be launched into R. The packages installed are:
 
 ```{r}
-pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, lubridate, tidyverse,readxl)
+pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, lubridate, tidyverse,readxl,igraph)
 
 ```
 
@@ -44,7 +44,7 @@ pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, lubridate, tidyverse,rea
 
 [readxl](https://readxl.tidyverse.org/)：An R package makes it easy to get data out of Excel and into R.
 
-All packages can be found within CRAN.
+[igraph](https://cran.r-project.org/web/packages/igraph/vignettes/igraph.html):igraph is a fast and open source library for the analysis of graphs or networks.
 
 ## 2.2 Data Introduction
 
@@ -97,6 +97,10 @@ mc2_nodes <- as_tibble(mc2_data$nodes) %>%
   select(id, shpcountry, rcvcountry)
 ```
 
+::: callout-note
+`select()` is used not only to select the field needed but also to re-organise the sequent of the fields.
+:::
+
 **Extracting Edges:** The code chunk is used to extract edges data table from mc2_data list object and save the output in a tibble data frame object called mc2_edges.
 
 ```{r}
@@ -110,11 +114,11 @@ mc2_edges <- as_tibble(mc2_data$links) %>%
 ```
 
 ::: callout-note
--   mutate() is used two times to create two derive fields.
+-   `mutate()` is used two times to create two derive fields.
 
-    -   ymd() of lubridate package is used to covert arrivaldate field from character data type into date data type.
+    -   `ymd()` of lubridate package is used to covert arrivaldate field from character data type into date data type.
 
-    -   year() of lubridate package is used to convert the values in ArrivalDate field into year values.
+    -   `year()` of lubridate package is used to convert the values in ArrivalDate field into year values.
 
 -   select() is used not only to select the field needed but also to re-organise the sequent of the fields.
 :::
@@ -140,6 +144,16 @@ hscode_counts_sorted <- sort(hscode_counts, decreasing = TRUE)
 hscode_counts_df <- data.frame(hscode = names(hscode_counts_sorted), count = hscode_counts_sorted, stringsAsFactors = FALSE)
 ```
 
+::: callout-note
+-   `grep(pattern, x)` is a function that searches for a specified pattern (pattern) within a character vector (x).
+
+-   `table(x)` is a function that creates a frequency table of the elements in the vector x. It counts the occurrences of each unique value and returns a table with the counts.
+
+\-`sort(x, decreasing = FALSE)`is a function that sorts the elements in the vector x in ascending order.
+
+\-`data.frame(..., stringsAsFactors = FALSE)` is a function that creates a data frame from the input arguments provided.
+:::
+
 After the compilation of the hscode_counts_df, it is important to determine the meaning of the HScode. Therefore, we proceed by reading the HScode list and employing the `left_join` function to establish a linkage between the item description and the hscode_counts_df data frame.
 
 ```{r}
@@ -156,6 +170,14 @@ HScode_list$`HS Code` <- as.character(HScode_list$`HS Code`)
 merged_data <- left_join(hscode_counts_df, select(HScode_list, -S.No.), by = c("hscode" = "HS Code"))
 
 ```
+
+::: callout-note
+`sub(pattern, replacement, x)` is a function that replaces the first occurrence of a pattern (pattern) in a character vector (x) with a specified replacement string (replacement).
+
+\`read_excel(file, sheet = 1)' is a function that reads an Excel file (file) and imports the data from the specified sheet (sheet) into R.
+
+\`left_join(x, y, by = c("column_x" = "column_y"))' is a function that performs a left join operation between two data frames (x and y) based on the specified column(s) to match (by).
+:::
 
 We have summarized the top 6 most frequently occurring HScodes in the dataframe, along with their corresponding fish types based on the HScode descriptions. These HScodes and their associated fish types will serve as the starting point for our research.
 
@@ -189,12 +211,30 @@ aggregate_data_HScode <- transition_data_HScode %>%
 # Filter the data 
 filtered_data <- subset(aggregate_data_HScode, HScode_type < 10)
 
-# Plot the histogram
 ggplot(filtered_data, aes(x = HScode_type)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
-  labs(x = "HScode_type", y = "Frequency", title = "Histogram of HScode_type (<10, binwidth = 1)")
+  geom_bar(fill = '#808de8') +
+  labs(x = "Running Year", y = "Count") +
+  ggtitle("Bar Chart of HScode_type (<10)") +
+  scale_x_continuous(breaks = 1:9, labels = 1:9) +
+  theme(axis.title.y = element_text(angle = 0),
+        axis.ticks.x = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(color = 'bisque3'),
+        plot.subtitle = element_text(color = "dimgrey", size = 12, face = "bold", hjust = 0.5))
 
 ```
+
+::: callout-note
+-   `c()`is used to concatenate or combine multiple values or objects into a single vector:
+
+c(mc2_edges$source, mc2_edges$target) creates a vector that concatenates the values of the source column and the target column from the mc2_edges data frame. This vector contains all the company names.
+
+c(mc2_edges$hscode, mc2_edges$hscode) creates a vector that concatenates the values of the hscode column from the mc2_edges data frame. This vector contains all the corresponding hscode for each company.
+
+-   `group_by()` is used to aggregate values by company. `mutate()` creates a new column called HScode_type, which contains the number of distinct HScode values for each company.`distinct()` keeps only the distinct combinations of company and HScode_type in the transition_data_HScode data frame. `cut()`categorizes the HScode_type values into two categories: "\<=1" and "\>1" based on the breakpoints.
+
+-   `subset(x, subset)` is a function used to subset a data frame (x) based on specified conditions (subset).
+:::
 
 In order to gain a holistic understanding of the distribution of companies with different product varieties, we have generated a histogram depicting the frequency of HScode_type values below 10. Upon examining the histogram, we observe a substantial proportion of companies having an HScode_type value of 1 compared to other HScode_type values.
 
@@ -229,8 +269,6 @@ To facilitate analysis, we have categorized the running years into distinct inte
 It is worth noting that companies with lower stability, falling within the "\<=2" category, tend to exhibit a higher likelihood of being associated with suspected illegal activities.
 
 ```{r}
-
-library(ggplot2)
 
 # Create a barchart of running_year distribution with adjusted x-axis labels
 ggplot(aggregate_data_Year, aes(x = running_year)) +
@@ -267,9 +305,6 @@ Centrality is a significant characteristic in network analysis. In this section,
 Through the computation of these centrality measures, we can gain insights into the structural importance and influence of each node within the network, enabling us to better understand the dynamics and functioning of the network as a whole.
 
 ```{r}
-#install.packages("igraph")  # Install the 'igraph' package
-library(igraph)             # Load the 'igraph' package
-
 # Aggregating edges data
 mc2_all_edges_aggregated <- mc2_edges %>%
   group_by(from = source, to = target, hscode, Year) %>%
@@ -277,6 +312,16 @@ mc2_all_edges_aggregated <- mc2_edges %>%
   filter(from != to) %>%
   filter(weights > 20) %>%
   ungroup()
+
+```
+
+::: callout-note
+-   `group_by()` is used to aggregate values by source, target, hscode, Year.
+-   `summarise()` and n() are used to count the aggregated records.
+-   `filter()` is then used to perform two selections to select all records whereby source are not equal to target to select all records whereby the values of their weights field are greater than 20
+:::
+
+```{r}
 
 # Extracting unique node IDs
 id1_all <- mc2_all_edges_aggregated %>%
@@ -311,6 +356,16 @@ node_data <- data.frame(
 )
 ```
 
+::: callout-note
+-   `rbind()`combines the id1_all and id2_all data frames vertically, we get a single data frame mc2_all_nodes_extracted with all the distinct node IDs.
+
+-   `betweenness()`calculates the betweenness centrality for each node.
+
+-   `degree(, mode = "in")`calculates the in-degree centrality for each node.
+
+-   `degree(, mode = "out")`calculates the out-degree centrality for each node.
+:::
+
 Based on the node centrality table, we can classify the nodes into three distinct groups: Wholesaler: Nodes exhibiting non-zero values in betweenness centrality, in-degree centrality, and out-degree centrality. These nodes demonstrate a comprehensive pattern of connectivity within the network, indicating their involvement in multiple fish trading flows. We can infer that these nodes operate as wholesalers, facilitating the buying and selling of fish products. Buyer: Nodes displaying non-zero values in in-degree centrality, while both betweenness centrality and out-degree centrality possess zero values. These nodes primarily act as recipients or buyers within the network, buying fish products from other nodes. Supplier: Nodes featuring non-zero values in out-degree centrality, while both betweenness centrality and in-degree centrality exhibit zero values. These nodes operate as suppliers within the network, selling fish product to other nodes.
 
 ```{r}
@@ -344,7 +399,6 @@ node_data$size_all <- ifelse(node_data$Betweenness != 0, normalized_betweenness,
 node_data$company_category <- ifelse(node_data$Betweenness != 0, "Wholesaler",
                          ifelse(node_data$Out_Degree != 0, "Supplier",
                                 ifelse(node_data$In_Degree != 0,"Buyer", NA)))
-#glimpse(node_data)
 
 ```
 
@@ -375,13 +429,19 @@ boxplot_plot
 
 ```
 
+::: callout-note
+\-`select()`selects specific columns (company_label, Betweenness, In_Degree, Out_Degree) from the node_data data frame.
+
+-   `pivot_longer()`reshapes the data frame from a wide format to a long format. It takes all columns except for company_label and pivots them into two new columns: variable and value.
+:::
+
 From the boxplot analysis, the following observations can be made:
 
-\- Only nodes categorized as wholesalers exhibit non-zero values in betweenness centrality. The range of betweenness centrality scores for wholesalers falls between \[minimum value\] and \[maximum value\].
+\- Only nodes categorized as wholesalers exhibit non-zero values in betweenness centrality. The range of betweenness centrality scores for wholesalers falls between 24 and 51.
 
-\- Nodes categorized as suppliers have a zero in-degree centrality. Nodes categorized as buyers have a higher in-degree centrality compared to wholesalers within the same level. For instance, the in-degree centrality range for high-level buyers is from \[minimum value\] to \[maximum value\], whereas the in-degree centrality range for high-level wholesalers is from \[minimum value\] to \[maximum value\].
+\- Nodes categorized as suppliers have a zero in-degree centrality. Nodes categorized as buyers have a higher in-degree centrality compared to wholesalers within the same level. For instance, the in-degree centrality range for high-level buyers is from 192 to 380, whereas the in-degree centrality range for high-level wholesalers is from 3 to 111.
 
-\- Nodes categorized as buyers have a zero in-degree centrality. Nodes categorized as suppliers have a higher out-degree centrality compared to wholesalers within the same level. For example, the out-degree centrality range for high-level suppliers is from \[minimum value\] to \[maximum value\], whereas the out-degree centrality range for high-level wholesalers is from \[minimum value\] to \[maximum value\].
+\- Nodes categorized as buyers have a zero in-degree centrality. Nodes categorized as suppliers have a higher out-degree centrality compared to wholesalers within the same level. For example, the out-degree centrality range for high-level suppliers is from 53 to 94, whereas the out-degree centrality range for high-level wholesalers is from 1 to 39.
 
 For the subsequent analysis, we will simplify the node categorization into three basic models: wholesalers, buyers, and suppliers, in order to avoid excessive grouping and maintain focus on the fundamental classification.
 
@@ -394,13 +454,13 @@ node_data_feature <- node_data %>%
   left_join(aggregate_data_HScode %>% distinct(company, HScode_category), by = c("ID" = "company"))  %>%
   left_join(aggregate_data_Year %>% distinct(company, running_year_category), by = c("ID" = "company")) 
 
-glimpse(node_data_feature)
-
 ```
 
+::: callout-note
+By two `left_join()`,node_data_feature includes the original columns from the node_data data frame, as well as the additional columns "HScode_category" and "running_year_category".
+:::
+
 ```{r}
-# Remove rows with NA values
-# <- node_data_feature[complete.cases(node_data_feature), ]
 
 # Create Company_group column and assign values based on conditions
 node_data_feature$Company_group <- ifelse(
@@ -452,24 +512,23 @@ node_data_feature$Company_group <- ifelse(
     )
   )
 )
+
 ```
 
 ```{r}
-library(ggplot2)
-
 # Create a named vector that specifies the color corresponding to each group
-group_colors <- c("Unstable_Uniform_Supplier" = "red",
-                  "Unstable_Diverse_Supplier" = "blue",
-                  "Stable_Uniform_Supplier" = "green",
-                  "Stable_Diverse_Supplier" = "orange",
-                  "Unstable_Uniform_Buyer" = "purple",
-                  "Unstable_Diverse_Buyer" = "yellow",
-                  "Stable_Uniform_Buyer" = "pink",
-                  "Stable_Diverse_Buyer" = "brown",
-                  "Unstable_Uniform_Wholesaler" = "gray",
-                  "Unstable_Diverse_Wholesaler" = "cyan",
-                  "Stable_Uniform_Wholesaler" = "magenta",
-                  "Stable_Diverse_Wholesaler" = "Aquamarine")
+group_colors <- c("Unstable_Uniform_Supplier" = "greenyellow",
+                  "Unstable_Diverse_Supplier" = "green2",
+                  "Stable_Uniform_Supplier" = "green4",
+                  "Stable_Diverse_Supplier" = "khaki",
+                  "Unstable_Uniform_Buyer" = "yellow3",
+                  "Unstable_Diverse_Buyer" = "yellow4",
+                  "Stable_Uniform_Buyer" = "mediumorchid1",
+                  "Stable_Diverse_Buyer" = "mediumpurple1",
+                  "Unstable_Uniform_Wholesaler" = "mediumslateblue",
+                  "Unstable_Diverse_Wholesaler" = "lightpink",
+                  "Stable_Uniform_Wholesaler" = "lightpink2",
+                  "Stable_Diverse_Wholesaler" = "lightpink3")
 
 # Count Company_ Number of groups per category
 group_counts <- table(node_data_feature$Company_group)
@@ -477,7 +536,8 @@ group_counts <- table(node_data_feature$Company_group)
 # Convert count results into dataframe
 group_counts_df <- data.frame(Company_group = names(group_counts), Frequency = as.numeric(group_counts))
 
-# Draw a bar chart bfor the company group
+# Draw a bar chart for the company group
+group_counts_df$Company_group <- reorder(group_counts_df$Company_group, group_counts_df$Frequency)
 ggplot(group_counts_df, aes(x = Company_group, y = Frequency, fill = Company_group)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = group_colors) +
@@ -489,6 +549,12 @@ ggplot(group_counts_df, aes(x = Company_group, y = Frequency, fill = Company_gro
 
 
 ```
+
+::: callout-note
+\-`reorder()` is used to reorder the levels of the Company_group factor in the group_counts_df dataframe based on the Frequency variable.
+
+\-`coord_flip()` is used to flip the x and y axes, resulting in a horizontal bar chart.
+:::
 
 To visualize the distribution of companies within these groups, a bar chart is plotted based on the company group. It is evident from the chart that the "Stable_Diverse_Supplier" group exhibits the highest percentage, followed by the "Stable_Diverse_Buyer" group. These two groups demonstrate noticeably higher percentages compared to the other groups, indicating their prominence within the network.
 
@@ -533,7 +599,7 @@ mc2_nodes_extracted <- mc2_nodes_extracted %>%
 # Plot the network graph using visNetwork
 g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50) %>%
+  visNodes(size =50,color = group_colors) %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -552,44 +618,304 @@ g
 ## 2029
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2029") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
+
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 
 ```
 
 ## 2030
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2030") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 ```
 
 ## 2031
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2031") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 ```
 
 ## 2032
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2032") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 ```
 
 ## 2033
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2033") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 ```
 
 ## 2034
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2034") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+# Plot the network graph using visNetwork
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size =50,color = group_colors) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
 ```
+:::
+
+::: callout-note
+`selectedBy` = "group": Specifies that nodes can be selected by their group attribute. highlightNearest: Configures the highlighting of nearest nodes.
+
+`enabled` = TRUE: Enables the highlighting of nearest nodes.
+
+`degree` = 1: Specifies the degree of nearest nodes to be highlighted. Here, it is set to 1, meaning only the immediate neighboring nodes will be highlighted.
+
+`hover` = TRUE: Enables highlighting on hover.
+
+`labelOnly` = TRUE: Specifies that only the label of the node will be highlighted.
+
+`nodesIdSelection` = TRUE: Allows selecting nodes by their ID.
 :::
 
 ## 3.2 Ego-Network for Key Node
 
 For further analysis of key node connections, an ego-net approach is employed to examine the connections of a specific node, namely "hǎi dǎn Corporation Wharf," which has been identified based on the previous section's analysis. The selection of this node is driven by its numerous short-running year connections, suggesting potential significance and relevance in the network structure. By focusing on the ego-net of Hai Dan Corporation, we can gain deeper insights into its immediate connections and study its specific role and influence within the network.
-
 
 ::: panel-tabset
 ## 2028
@@ -661,40 +987,413 @@ visEdges(color = list(highlight = "lightgray")) %>%
 ## 2029
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2029") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 
 ## 2030
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2030") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 
 ## 2031
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2031") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 
 ## 2032
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2032") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 
 ## 2033
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2033") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 
 ## 2034
 
 ```{r}
+# Aggregating and filtering edges data
+mc2_edges_aggregated <- mc2_edges %>%
+  filter(hscode == "306170"& Year == "2034") %>%
+  group_by(from = source, to = target, hscode, Year) %>%
+  summarise(weights = n()) %>%
+  filter(from != to) %>%
+  filter(weights > 20) %>%
+  ungroup()
 
+# Extracting unique node IDs
+id1 <- mc2_edges_aggregated %>%
+  select(from) %>%
+  rename(id = from)
+id2 <- mc2_edges_aggregated %>%
+  select(to) %>%
+  rename(id = to)
+mc2_nodes_extracted <- rbind(id1, id2) %>%
+  distinct()
+
+# Joining extracted nodes with company data to add running_year_category information
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
+
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(group = Company_group)
+
+
+ego_edges <- mc2_edges_aggregated %>%
+  filter(from == "hǎi dǎn Corporation Wharf" | to == "hǎi dǎn Corporation Wharf")
+
+# Extract unique node IDs from ego_edges
+ego_node_ids <- unique(c(ego_edges$from, ego_edges$to))
+
+# Filter ego_nodes using the unique node IDs
+ego_nodes <- mc2_nodes_extracted %>%
+  filter(id %in% ego_node_ids) %>%
+  mutate(node_id = row_number())
+
+# Update ego_edges with the corresponding node IDs
+ego_edges <- ego_edges %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
+  rename(from_node = node_id) %>%
+  left_join(ego_nodes %>% select(id, node_id), by = c("to" = "id")) %>%
+  rename(to_node = node_id)
+
+
+visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(size = 20) %>%
+  visEdges(color = "gray") %>%
+visEdges(color = list(highlight = "lightgray")) %>%
+ visOptions(selectedBy = "group",
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)  
 ```
 :::
 
-4.  Future Work
+::: callout-note
+-   Filtering the `mc2_edges_aggregated` dataframe to extract the edges that involve the node "hǎi dǎn Corporation Wharf" as either the source or the target. The resulting subset is assigned to the `ego_edges` dataframe.
 
-5.  Reference
+-   Extracting the unique node IDs from the `ego_edges` dataframe.
+
+-   Filtering the `mc2_nodes_extracted` dataframe to select only the nodes whose IDs are present in the `ego_node_ids` vector. This is done using the `%in%` operator to match the values of the "id" column with the values in `ego_node_ids`.
+:::
+
+# 4. Future Work
+
+1.  In the section "3.1 Interactive Network Graph with visNetwork," we focused on analyzing the network using a single HScode. As a next step, we can enhance the analysis by developing a Shiny app that offers a more flexible dropdown list. This will allow users to select different HScodes and Years to explore and understand the changing network patterns.
+
+2.  In the section "3.2 Ego-Network for Key Node," we visualized the ego-network for a specific company. However, to provide a more comprehensive analysis, we can further develop the Shiny app to include a dropdown list. This dropdown list will enable users to select different companies and visualize their respective ego-networks, providing insights into the network structures around each company.
+
+3.  This analysis primarily focused on Task 1. To further leverage the predicted knowledge graph links provided by FishEye, we can identify new patterns and anomalies. Additionally, we can use these patterns to detect companies that exhibit behaviors indicative of illegal fishing activities.
+
+# 5. Reference
+
+1.  Andrew, Stefano, 'Social Network Analysis of Global Transshipment:A Framework for Discovering Illegal Fishing', ASONAM, 2020([link](https://web.ntpu.edu.tw/~myday/doc/ASONAM2020/ASONAM2020_Proceedings/pdf/papers/122_143_776.pdf))
+2.  Kittiya Kositduriyapun,'Social Network Analysis with R : Centrality Measure',2019([link](https://medium.com/@615162020004/social-network-analysis-with-r-centrality-measure-86d7fa273574))
+3.  VisNetwork, an R package for interactive network visualization ([link](http://datastorm-open.github.io/visNetwork/))
+4.  Harmonized System (HS) Codes ([link](https://www.trade.gov/harmonized-system-hs-codes))
