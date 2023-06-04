@@ -15,7 +15,7 @@ To facilitate their analysis, FishEye has transformed the trade data into a know
 
 Based on FishEye's previous experiences, they are aware that companies engaged in illegal fishing tend to cease their operations temporarily but often resume their activities under different names.
 
-The objective of this exercise is to compare the activities of these companies over time and identify any indications of their potential return to illicit practices.
+The objective of this exercise is to identify temporal patterns for individual entities and between entities in the knowledge graph FishEye created from trade records.
 
 This exercise source is from: [Mini-Challenge 2 task 1](https://vast-challenge.github.io/2023/MC2.html)
 
@@ -213,7 +213,7 @@ filtered_data <- subset(aggregate_data_HScode, HScode_type < 10)
 
 ggplot(filtered_data, aes(x = HScode_type)) +
   geom_bar(fill = '#808de8') +
-  labs(x = "Running Year", y = "Count") +
+  labs(x = "HScode_type", y = "Count") +
   ggtitle("Bar Chart of HScode_type (<10)") +
   scale_x_continuous(breaks = 1:9, labels = 1:9) +
   theme(axis.title.y = element_text(angle = 0),
@@ -221,7 +221,6 @@ ggplot(filtered_data, aes(x = HScode_type)) +
         panel.background = element_blank(),
         axis.line = element_line(color = 'bisque3'),
         plot.subtitle = element_text(color = "dimgrey", size = 12, face = "bold", hjust = 0.5))
-
 ```
 
 ::: callout-note
@@ -236,9 +235,7 @@ c(mc2_edges$hscode, mc2_edges$hscode) creates a vector that concatenates the val
 -   `subset(x, subset)` is a function used to subset a data frame (x) based on specified conditions (subset).
 :::
 
-In order to gain a holistic understanding of the distribution of companies with different product varieties, we have generated a histogram depicting the frequency of HScode_type values below 10. Upon examining the histogram, we observe a substantial proportion of companies having an HScode_type value of 1 compared to other HScode_type values.
-
-To further categorize the companies based on their product variety, we have introduced a new categorical variable named "HScode_category." This variable assigns a label to each node, differentiating between HScode_type values less than or equal to 1 and those greater than 1. HScode_type \<= 1 indicate companies with a narrow focus, specializing in a specific fish type. Conversely, HScode_type \>1 indicates companies with a relatively diverse range of products.
+In order to gain a holistic understanding of the distribution of companies with different product varieties, we have generated a bar chart depicting the frequency of HScode_type values below 10. Upon examining the bar chart, we observe a substantial proportion of companies having an HScode_type value of 1 compared to other HScode_type values.
 
 ### 2.3.3 Data Preparation \_ Running Year Category
 
@@ -257,16 +254,16 @@ aggregate_data_Year <- transition_data_Year %>%
   group_by(company) %>%
   mutate(running_year = n_distinct(Year)) %>%
   distinct(company, running_year) %>%
-  mutate(running_year_category = cut(running_year, breaks = c(-Inf, 2, Inf), labels = c("<=2",">2")))
+  mutate(running_year_category = cut(running_year, breaks = c(-Inf, 3, Inf), labels = c("<=3",">3")))
 ```
 
-To facilitate analysis, we have categorized the running years into distinct intervals, namely "\<=2" and "\>2", to assess the stability of the companies. Within these intervals:
+To facilitate analysis, we have categorized the running years into distinct intervals, namely "\<=3" and "\>3", to assess the stability of the companies. Within these intervals:
 
--   "\<=2" category represents companies with lower stability
+-   "\<=3" category represents companies with lower stability
 
--   "\>2" years category signifies a relatively high level of stability.
+-   "\>3" years category signifies a relatively high level of stability.
 
-It is worth noting that companies with lower stability, falling within the "\<=2" category, tend to exhibit a higher likelihood of being associated with suspected illegal activities.
+It is worth noting that companies with lower stability, falling within the "\<=3" category, tend to exhibit a higher likelihood of being associated with suspected illegal activities.
 
 ```{r}
 
@@ -366,7 +363,13 @@ node_data <- data.frame(
 -   `degree(, mode = "out")`calculates the out-degree centrality for each node.
 :::
 
-Based on the node centrality table, we can classify the nodes into three distinct groups: Wholesaler: Nodes exhibiting non-zero values in betweenness centrality, in-degree centrality, and out-degree centrality. These nodes demonstrate a comprehensive pattern of connectivity within the network, indicating their involvement in multiple fish trading flows. We can infer that these nodes operate as wholesalers, facilitating the buying and selling of fish products. Buyer: Nodes displaying non-zero values in in-degree centrality, while both betweenness centrality and out-degree centrality possess zero values. These nodes primarily act as recipients or buyers within the network, buying fish products from other nodes. Supplier: Nodes featuring non-zero values in out-degree centrality, while both betweenness centrality and in-degree centrality exhibit zero values. These nodes operate as suppliers within the network, selling fish product to other nodes.
+Based on the node centrality table, we can classify the nodes into three distinct groups:
+
+**Wholesaler:** Nodes exhibiting non-zero values in betweenness centrality, in-degree centrality, and out-degree centrality. These nodes demonstrate a comprehensive pattern of connectivity within the network, indicating their involvement in multiple fish trading flows. We can infer that these nodes operate as wholesalers, facilitating the buying and selling of fish products.
+
+**Buyer:** Nodes displaying non-zero values in in-degree centrality, while both betweenness centrality and out-degree centrality possess zero values. These nodes primarily act as recipients or buyers within the network, buying fish products from other nodes.
+
+**Supplier:** Nodes featuring non-zero values in out-degree centrality, while both betweenness centrality and in-degree centrality exhibit zero values. These nodes operate as suppliers within the network, selling fish product to other nodes.
 
 ```{r}
 node_data$company_label <- NA  # Create a new column for storing company_ Label
@@ -384,18 +387,16 @@ node_data$company_label[node_data$Betweenness == 0 & node_data$In_Degree == 0 & 
 node_data$company_label[node_data$Betweenness == 0 & node_data$In_Degree == 0 & node_data$Out_Degree != 0 & node_data$Out_Degree <= 50 & node_data$Out_Degree >= 20] <- "supplier_medium"
 node_data$company_label[node_data$Betweenness == 0 & node_data$In_Degree == 0 & node_data$Out_Degree != 0 & node_data$Out_Degree < 20] <- "supplier_low"
 
-
 # Calculate the normalization of Betweenness, In_Degree, and Out_Degree
 normalized_betweenness <- (node_data$Betweenness - min(node_data$Betweenness)) / (max(node_data$Betweenness) - min(node_data$Betweenness))
 normalized_in_degree <- (node_data$In_Degree - min(node_data$In_Degree)) / (max(node_data$In_Degree) - min(node_data$In_Degree))
 normalized_out_degree <- (node_data$Out_Degree - min(node_data$Out_Degree)) / (max(node_data$Out_Degree) - min(node_data$Out_Degree))
 
-# Add the 'size' column based on conditions
-node_data$size_all <- ifelse(node_data$Betweenness != 0, normalized_betweenness,
-                         ifelse(node_data$Out_Degree != 0, normalized_out_degree,
-                                ifelse(node_data$In_Degree != 0, normalized_in_degree, NA)))
 
 # Add the 'size' column based on conditions
+node_data$size_all <- normalized_betweenness + normalized_in_degree + normalized_out_degree
+
+# identification based on betweenness/in-degree/out-degree centrality
 node_data$company_category <- ifelse(node_data$Betweenness != 0, "Wholesaler",
                          ifelse(node_data$Out_Degree != 0, "Supplier",
                                 ifelse(node_data$In_Degree != 0,"Buyer", NA)))
@@ -447,58 +448,39 @@ For the subsequent analysis, we will simplify the node categorization into three
 
 ### 2.3.5 Data Preparation \_ Data Feature Extraction
 
-In this section, we will create a new data frame called "node_data_feature" to consolidate the features obtained from previous analyses. This data frame will incorporate information regarding the nodes' running_year_category, HScode_category, and company_label (wholesaler, supplier, or buyer), thereby enabling further subgrouping of the nodes based on these features.
+In this section, we will create a new data frame called "node_data_feature" to consolidate the features obtained from previous analyses. This data frame will incorporate information regarding the nodes' running_year_category and company_label (wholesaler, supplier, or buyer), thereby enabling further subgrouping of the nodes based on these features.
 
 ```{r}
 node_data_feature <- node_data %>%
-  left_join(aggregate_data_HScode %>% distinct(company, HScode_category), by = c("ID" = "company"))  %>%
   left_join(aggregate_data_Year %>% distinct(company, running_year_category), by = c("ID" = "company")) 
 
 ```
 
 ::: callout-note
-By two `left_join()`,node_data_feature includes the original columns from the node_data data frame, as well as the additional columns "HScode_category" and "running_year_category".
+By `left_join()`,node_data_feature includes the original columns from the node_data data frame, as well as the additional columns "running_year_category".
 :::
 
 ```{r}
 
 # Create Company_group column and assign values based on conditions
 node_data_feature$Company_group <- ifelse(
-  node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Supplier",
-  "Unstable_Uniform_Supplier",
-  ifelse(
-    node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Supplier",
-    "Unstable_Diverse_Supplier",
+  node_data_feature$running_year_category == "<=3" & node_data_feature$company_category == "Supplier",
+  "Unstable_Supplier",
     ifelse(
-      node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Supplier",
-      "Stable_Uniform_Supplier",
-      ifelse(
-        node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Supplier",
-        "Stable_Diverse_Supplier",
+      node_data_feature$running_year_category == ">3" & node_data_feature$company_category == "Supplier",
+      "Stable_Supplier",
         ifelse(
-          node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Buyer",
-          "Unstable_Uniform_Buyer",
-          ifelse(
-            node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Buyer",
-            "Unstable_Diverse_Buyer",
+          node_data_feature$running_year_category == "<=3" & node_data_feature$company_category == "Buyer",
+          "Unstable_Buyer",
             ifelse(
-              node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Buyer",
-              "Stable_Uniform_Buyer",
-              ifelse(
-                node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Buyer",
-                "Stable_Diverse_Buyer",
-                ifelse(
-                  node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Wholesaler",
-                  "Unstable_Uniform_Wholesaler",
+              node_data_feature$running_year_category == ">3" & node_data_feature$company_category == "Buyer",
+              "Stable_Buyer",
                   ifelse(
-                    node_data_feature$running_year_category == "<=2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Wholesaler",
-                    "Unstable_Diverse_Wholesaler",
+                    node_data_feature$running_year_category == "<=3" & node_data_feature$company_category == "Wholesaler",
+                    "Unstable_Wholesaler",
                     ifelse(
-                      node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == "<=1" & node_data_feature$company_category == "Wholesaler",
-                      "Stable_Uniform_Wholesaler",
-                      ifelse(
-                        node_data_feature$running_year_category == ">2" & node_data_feature$HScode_category == ">1" & node_data_feature$company_category == "Wholesaler",
-                        "Stable_Diverse_Wholesaler",
+                      node_data_feature$running_year_category == ">3" & node_data_feature$company_category == "Wholesaler",
+                      "Stable_Wholesaler",
                         "Unknown"  # Handling unmatched situations can be changed according to actual needs
                       )
                     )
@@ -506,29 +488,23 @@ node_data_feature$Company_group <- ifelse(
                 )
               )
             )
-          )
-        )
-      )
-    )
-  )
-)
+
 
 ```
 
 ```{r}
 # Create a named vector that specifies the color corresponding to each group
-group_colors <- c("Unstable_Uniform_Supplier" = "greenyellow",
-                  "Unstable_Diverse_Supplier" = "green2",
-                  "Stable_Uniform_Supplier" = "green4",
-                  "Stable_Diverse_Supplier" = "khaki",
-                  "Unstable_Uniform_Buyer" = "yellow3",
-                  "Unstable_Diverse_Buyer" = "yellow4",
-                  "Stable_Uniform_Buyer" = "mediumorchid1",
-                  "Stable_Diverse_Buyer" = "mediumpurple1",
-                  "Unstable_Uniform_Wholesaler" = "mediumslateblue",
-                  "Unstable_Diverse_Wholesaler" = "lightpink",
-                  "Stable_Uniform_Wholesaler" = "lightpink2",
-                  "Stable_Diverse_Wholesaler" = "lightpink3")
+group_colors <- c("Unstable_Supplier" = "lightpink1",
+                  
+                  "Stable_Supplier" = "lightpink2",
+                 
+                  "Unstable_Buyer" = "cadetblue3",
+       
+                  "Stable_Buyer" = "cadetblue",
+               
+                  "Unstable_Wholesaler" = "grey",
+                
+                  "Stable_Wholesaler" = "grey60")
 
 # Count Company_ Number of groups per category
 group_counts <- table(node_data_feature$Company_group)
@@ -556,7 +532,7 @@ ggplot(group_counts_df, aes(x = Company_group, y = Frequency, fill = Company_gro
 \-`coord_flip()` is used to flip the x and y axes, resulting in a horizontal bar chart.
 :::
 
-To visualize the distribution of companies within these groups, a bar chart is plotted based on the company group. It is evident from the chart that the "Stable_Diverse_Supplier" group exhibits the highest percentage, followed by the "Stable_Diverse_Buyer" group. These two groups demonstrate noticeably higher percentages compared to the other groups, indicating their prominence within the network.
+To visualize the distribution of companies within these groups, a bar chart is plotted based on the company group. It is evident from the chart that the "Stable_Supplier" group exhibits the highest percentage, followed by the "Stable_Buyer" group. These two groups demonstrate noticeably higher percentages compared to the other groups, indicating their prominence within the network. There is no unstable_wholesaler in the dataset.
 
 # 3. Data Visualisation
 
@@ -589,17 +565,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -607,10 +589,16 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
 
 ```
@@ -637,17 +625,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -655,10 +649,16 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
 
 ```
@@ -685,17 +685,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -703,10 +709,16 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
 ```
 
@@ -732,17 +744,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -750,10 +768,16 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
 ```
 
@@ -779,17 +803,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -797,10 +827,16 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
 ```
 
@@ -826,17 +862,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -844,11 +886,18 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
+
 ```
 
 ## 2034
@@ -873,17 +922,23 @@ id2 <- mc2_edges_aggregated %>%
 mc2_nodes_extracted <- rbind(id1, id2) %>%
   distinct()
 
-# Joining extracted nodes with company data to add running_year_category information
+# Joining extracted nodes with node_data_feature
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   left_join(node_data_feature %>% distinct(ID, size_all, Company_group), by = c("id" = "ID")) 
 
 mc2_nodes_extracted <- mc2_nodes_extracted %>%
   rename(group = Company_group)
 
-# Plot the network graph using visNetwork
-g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height = "500px", width = "100%") %>%
+# Node size adjustment
+mc2_nodes_extracted <- mc2_nodes_extracted %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+# Plot the Network
+g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size =50,color = group_colors) %>%
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
   visEdges(color = list(highlight = "lightgray")) %>%
   visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
@@ -891,11 +946,18 @@ g <- visNetwork(nodes = mc2_nodes_extracted, edges = mc2_edges_aggregated,height
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
   visLayout(randomSeed = 123)
-
 g
+
 ```
 :::
 
@@ -911,11 +973,13 @@ g
 `labelOnly` = TRUE: Specifies that only the label of the node will be highlighted.
 
 `nodesIdSelection` = TRUE: Allows selecting nodes by their ID.
+
+`VisGroup()` is used to set the node color.
 :::
 
 ## 3.2 Ego-Network for Key Node
 
-For further analysis of key node connections, an ego-net approach is employed to examine the connections of a specific node, namely "hǎi dǎn Corporation Wharf," which has been identified based on the previous section's analysis. The selection of this node is driven by its numerous short-running year connections, suggesting potential significance and relevance in the network structure. By focusing on the ego-net of Hai Dan Corporation, we can gain deeper insights into its immediate connections and study its specific role and influence within the network.
+For further analysis of key node connections, an ego-net approach is employed to examine the connections of a specific node, namely "hǎi dǎn Corporation Wharf", which has been identified based on the previous section's analysis. The selection of this node is driven by its large in-degree centrality, suggesting potential significance and relevance in the network structure. By focusing on the ego-net of "hǎi dǎn Corporation Wharf", we can gain deeper insights into its immediate connections and study its specific role and influence within the network.
 
 ::: panel-tabset
 ## 2028
@@ -959,6 +1023,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -967,20 +1037,31 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)   
+  visLayout(randomSeed = 123)
+g
+
 
 ```
 
@@ -1025,6 +1106,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1033,20 +1120,31 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
 ```
 
 ## 2030
@@ -1090,6 +1188,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1098,20 +1202,32 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
+
 ```
 
 ## 2031
@@ -1155,6 +1271,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1163,20 +1285,31 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
 ```
 
 ## 2032
@@ -1220,6 +1353,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1228,20 +1367,31 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
 ```
 
 ## 2033
@@ -1285,6 +1435,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1293,20 +1449,32 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
+
 ```
 
 ## 2034
@@ -1350,6 +1518,12 @@ ego_nodes <- mc2_nodes_extracted %>%
   filter(id %in% ego_node_ids) %>%
   mutate(node_id = row_number())
 
+# Set the node size
+ego_nodes <- ego_nodes %>%
+  rename(size = size_all) %>%
+  mutate(size = size * 100)
+
+
 # Update ego_edges with the corresponding node IDs
 ego_edges <- ego_edges %>%
   left_join(ego_nodes %>% select(id, node_id), by = c("from" = "id")) %>%
@@ -1358,20 +1532,31 @@ ego_edges <- ego_edges %>%
   rename(to_node = node_id)
 
 
-visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%" ) %>%
+
+# Plot the Ego-Network
+g <- visNetwork(nodes = ego_nodes, edges = ego_edges, height = "500px", width = "100%") %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visNodes(size = 20) %>%
-  visEdges(color = "gray") %>%
-visEdges(color = list(highlight = "lightgray")) %>%
- visOptions(selectedBy = "group",
+  visNodes(color = group_colors) %>%
+  visEdges(arrows = 'to') %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = "group",
              highlightNearest = list(enabled = TRUE,
                                      degree = 1,
                                      hover = TRUE,
                                      labelOnly = TRUE),
              nodesIdSelection = TRUE) %>%
+  visGroups(groupname = "Unstable_Supplier", color = "yellow") %>%    
+  visGroups(groupname = "Stable_Supplier", color = "grey") %>%
+  visGroups(groupname = "Unstable_Buyer", color = "orange") %>%  
+  visGroups(groupname = "Stable_Buyer", color = "cadetblue") %>%  
+  visGroups(groupname = "Unstable_Wholesaler", color = "yellow") %>% 
+  visGroups(groupname = "Stable_Wholesaler", color = "green") %>% 
+
   visLegend() %>%
   visInteraction(navigationButtons = TRUE) %>%
-  visLayout(randomSeed = 123)  
+  visLayout(randomSeed = 123)
+g
+
 ```
 :::
 

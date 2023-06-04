@@ -106,7 +106,7 @@ Contains information about financial transactions.
 ### 2.3.1 Data Issue and Modification
 
 | Item | Issue                                                                              | Solution                                                                                          |
-|:-----------------:|:------------------------|:----------------------------|
+|:----:|:-----------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------|
 |  1   | wrong data type                                                                    | check & modify all the variable's data type as per the data type indicated in dataset description |
 |  2   | "RentAdjustment" is the refundable portion of rent, which belongs to the "shelter" | replace all the "RentAdjustment" with "shelter"                                                   |
 |  3   | "timestamp" format is too complicated and not useable.                             | Consider all the record belong to same year, so change "timestamp" to "month"                     |

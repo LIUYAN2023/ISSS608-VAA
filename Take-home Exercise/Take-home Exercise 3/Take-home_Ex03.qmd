@@ -1,5 +1,66 @@
 ---
 title: "Take-home_Ex03"
 author: "LIU YAN"
+date: "17 June 2023"
 editor: visual
 ---
+# 1. Overview
+
+FishEye International, a non-profit focused on countering illegal, unreported, and unregulated (IUU) fishing, has been given access to an international finance corporation’s database on fishing related companies. In the past, FishEye has determined that companies with anomalous structures are far more likely to be involved in IUU (or other “fishy” business). FishEye has transformed the database into a knowledge graph. It includes information about companies, owners, workers, and financial status. FishEye is aiming to use this graph to identify anomalies that could indicate a company is involved in IUU.
+
+FishEye analysts have attempted to use traditional node-link visualizations and standard graph analyses, but these were found to be ineffective because the scale and detail in the data can obscure a business’s true structure.
+
+This exercise source is from: [Mini-Challenge 3 task 2](https://vast-challenge.github.io/2023/MC3.html)
+
+# 2. Data Preparation
+
+## 2.1 Install R Packages and Import Dataset
+
+The code chunk below uses pacman::p_load() to check if packages are installed. If they are, they will be launched into R. The packages installed are:
+
+```{r}
+pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, lubridate, tidyverse,readxl,igraph)
+
+```
+
+[jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html): A simple and robust JSON parser and generator for R.
+
+[tidygraph](https://tidygraph.data-imaginist.com/): this package provides a tidy API for graph/network manipulation.
+
+[ggraph](https://davidgohel.github.io/ggiraph/): ggiraph is a tool that allows you to create dynamic ggplot graphs.
+
+[visNetwork](http://datastorm-open.github.io/visNetwork/): an R package for network visualization, using vis.js javascript library.
+
+[lubridate](https://lubridate.tidyverse.org/): an R package that makes it easier to work with dates and times.
+
+[tidyverse](https://www.tidyverse.org/): A collection of core packages designed for data science, used extensively for data preparation and wrangling.
+
+[readxl](https://readxl.tidyverse.org/)：An R package makes it easy to get data out of Excel and into R.
+
+[igraph](https://cran.r-project.org/web/packages/igraph/vignettes/igraph.html):igraph is a fast and open source library for the analysis of graphs or networks.
+
+## 2.2 Data Introduction
+
+In the code chunk below, `fromJSON()` of jsonlite package is used to import mc2_challenge_graph.json into R environment.
+
+```{r}
+MC3_data <- fromJSON("data/MC3.json")
+```
+
+For the purpose of this study, a directed multi-graph is provided. There are totally 34552 nodes and 5464092 directed edges.
+
+
+```{r}
+
+MC3_nodes <- as_tibble(MC3_data$nodes) %>%
+  select(country,id,product_services,revenue_omu,type)
+
+```
+
+```{r}
+
+MC3_edges <- as_tibble(MC3_data$links) %>%
+  select(source,target,type) %>% 
+  distinct()
+
+```

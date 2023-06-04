@@ -323,7 +323,7 @@ For the purpose of this hands-on exercise, [Average Retail Prices Of Selected Co
 Use the code chunk below to import the AVERP.csv file into R environment.
 
 ```{r}
-averp <- read_csv("data/AVERP.csv") %>%
+averp <- read_csv("data/AVERP.csv")%>%
   mutate(`Date` = dmy(`Date`))
 ```
 
@@ -336,25 +336,25 @@ By default, read_csv will import data in Date field as Character data type. [dmy
 Next, the code chunk below will be used to plot the horizon graph.
 
 ```{r}
-averp %>% 
-  filter(Date >= "2018-01-01") %>%
-  ggplot() +
+averp %>% # tbl data frame
+  filter(Date >= "2018-01-01") %>% #select out the date
+  ggplot() + 
   geom_horizon(aes(x = Date, y=Values), 
                origin = "midpoint", 
-               horizonscale = 6)+
-  facet_grid(`Consumer Items`~.) +
+               horizonscale = 6)+ # 6 interval(months)
+  facet_grid(`Consumer Items`~.) + #'' bz there is a blank between the consumer and items 
     theme_few() +
-  scale_fill_hcl(palette = 'RdBu') +
+  scale_fill_hcl(palette = 'RdBu') + #color scheme
   theme(panel.spacing.y=unit(0, "lines"), strip.text.y = element_text(
-    size = 5, angle = 0, hjust = 0),
+    size = 5, angle = 0, hjust = 0), # adjust the text size 
     legend.position = 'none',
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size=7),
+    axis.text.x = element_text(size=7),#only use this setting
     axis.title.y = element_blank(),
     axis.title.x = element_blank(),
     axis.ticks.y = element_blank(),
     panel.border = element_blank()
     ) +
-    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") +
+    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") + # adjust the date_breaks
   ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
 ```
