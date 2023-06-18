@@ -187,7 +187,7 @@ By default, `unnest_tokens()` converts the tokens to lowercase, which makes them
 
 The two basic arguments to unnest_tokens() used here are column names. First we have the output column name that will be created as the text is unnested into it (word, in this case), and then the input column that the text comes from (product_services, in this case).
 
-the tidytext package has a function called stop_words that will help us clean up stop words.
+the tidytext package has a function called `stop_words` that will help us clean up stop words.
 
 ```{r}
 # New words to be added
@@ -201,9 +201,9 @@ stopwords_removed <- token_nodes %>%
 ```
 
 ::: callout-note
-Create new stop words and update the stop_words by 'bind_rows'
+Create new stop words and update the stop_words by `bind_rows`
 
-Then 'anti_join()' of dplyr package is used to remove all stop words from the analysis.
+Then `anti_join()` of dplyr package is used to remove all stop words from the analysis.
 :::
 
 We can visualise the words extracted by using the code chunk below.
@@ -224,13 +224,15 @@ stopwords_removed %>%
 ```
 
 ::: callout-note
-'count()' counts the frequency of each unique word in the 'word' column, sorting the result in descending order.
 
-'top_n(15)' selects the top 15 words with the highest frequency.
+`count()` counts the frequency of each unique word in the 'word' column, sorting the result in descending order.
 
-'mutate()' reorders the 'word' column based on the frequency ('n') of each word.
+`top_n(15)` selects the top 15 words with the highest frequency.
 
-'coord_flip()' flips the coordinates, resulting in a horizontal bar plot.
+`mutate()` reorders the 'word' column based on the frequency ('n') of each word.
+
+`coord_flip()` flips the coordinates, resulting in a horizontal bar plot.
+
 :::
 
 Based on the above bar chart, it is evident that three fishing related specific keywords, namely "fish","seafood","salmon" exhibit relatively higher percentages compared to other words. Consequently, we will employ these three key words as filters to select nodes and edges for further analysis in subsequent steps.
@@ -312,7 +314,7 @@ mc3_graph_fishing <- tbl_graph(nodes = mc3_nodes_fishing,
 
 ```
 
-Degree centrality is a measure that quantifies the number of edges connected to a specific node in a network. It serves as an indicator of the node's influence or centrality within the network, as nodes with a higher degree centrality exhibit a larger number of connections. In the context of the mc3_graph_fishing network, the degree centrality represents the number of companies or people that are connected to a particular node.
+Degree centrality is a measure that quantifies the number of edges connected to a specific node in a network. It serves as an indicator of the node's influence or centrality within the network, as nodes with a higher degree centrality exhibit a larger number of connections. In the context of the `mc3_graph_fishing` network, the degree centrality represents the number of companies or people that are connected to a particular node.
 
 In order to capture this information, we calculate the degree centrality for each node in the `mc3_graph_fishing` network. The resulting degree centrality values are then stored as a variable within the `mc3_nodes_fishing` dataset.
 
@@ -573,7 +575,7 @@ Upon observing the aforementioned visualization, it becomes apparent that the "J
 
 # 4. Future Work
 
-1.  In section 3.2, "Network for Anomalies Nodes," we utilized igraph to extract the network associated with the node "James Brown." However, we encountered a limitation where the id labels couldn't be displayed next to the nodes. Consequently, we resorted to manually inputting the node's id in the network to create new nodes and edges for generating the visNetwork plot. In future research, it is advisable to focus on either automating the creation of new nodes and edges or utilizing igraph to draw the network while incorporating id labels next to each node.
+1.  In section 3.2, "Network for Anomalies Nodes," we utilized igraph to extract the network associated with the node "James Brown" However, we encountered a limitation where the id labels couldn't be displayed next to the nodes. Consequently, we resorted to manually inputting the node's id in the network to create new nodes and edges for generating the visNetwork plot. In future research, it is advisable to focus on either automating the creation of new nodes and edges or utilizing igraph to draw the network while incorporating id labels next to each node.
 
 2.  Regarding the anomalies nodes identified in the preceding sections, it is imperative to gather additional evidence to substantiate the involvement of anomalous companies in illegal fishing activities.
 
