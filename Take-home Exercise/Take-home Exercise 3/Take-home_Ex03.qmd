@@ -421,8 +421,7 @@ combined_plot <- grid.arrange(
   heights = c(2, 1)
 )
 
-# Print the plot
-print(combined_plot)
+
 
 ```
 
