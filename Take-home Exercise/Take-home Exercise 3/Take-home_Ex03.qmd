@@ -9,6 +9,8 @@ editor: visual
 
 FishEye International, a non-profit organization dedicated to combatting illegal, unreported, and unregulated (IUU) fishing, has been granted access to an international finance corporation's comprehensive database on fishing-related companies. Based on prior investigations, FishEye has observed a strong correlation between companies exhibiting anomalous structures and their involvement in IUU activities or other suspicious practices. To facilitate their efforts, FishEye has transformed the database into a knowledge graph, encompassing extensive information about the companies, owners, workers, and financial status.
 
+![ESGCLARITY](/images/take-home_03.jpg){fig-align="right"}
+
 The objective of this exercise is to use visual analytics to identify anomalies in the business groups present in the knowledge graph.
 
 This exercise source is from: [Mini-Challenge 3 task 1](https://vast-challenge.github.io/2023/MC3.html)
@@ -22,16 +24,16 @@ The code chunk below will be used to install and load the necessary R packages t
 ```{r}
 pacman::p_load(jsonlite, tidygraph, ggraph, 
                visNetwork, graphlayouts, ggforce, 
-               skimr, tidytext, tidyverse,igraph)
+               skimr, tidytext, tidyverse,igraph,grid,gridExtra,DT,RColorBrewer)
 ```
 
 [jsonlite](https://cran.r-project.org/web/packages/jsonlite/): A simple and robust JSON parser and generator for R.
 
 [tidygraph](https://tidygraph.data-imaginist.com/): this package provides a tidy API for graph/network manipulation.
 
-ggraph: ggiraph is a tool that allows you to create dynamic ggplot graphs.
+[ggraph](https://ggraph.data-imaginist.com/): ggiraph is a tool that allows you to create dynamic ggplot graphs.
 
-visNetwork: an R package for network visualization, using vis.js javascript library.
+[visNetwork](https://datastorm-open.github.io/visNetwork/): an R package for network visualization, using vis.js javascript library.
 
 [graphlayouts](https://cran.r-project.org/web/packages/graphlayouts/index.html): Several new layout algorithms to visualize networks are provided which are not part of 'igraph'.
 
@@ -45,6 +47,14 @@ visNetwork: an R package for network visualization, using vis.js javascript libr
 
 [igraph](https://cran.r-project.org/web/packages/igraph/vignettes/igraph.html):igraph is a fast and open source library for the analysis of graphs or networks.
 
+[grid](https://bookdown.org/rdpeng/RProgDA/the-grid-package.html): provides a set of functions and classes that represent graphical objects.
+
+[gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html):provides a number of user-level functions to work with "grid" graphics, notably to arrange multiple grid-based plots on a page, and draw tables.
+
+[DT](https://rstudio.github.io/DT/): provides an R interface to the JavaScript library DataTables.
+
+[RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/index.html):provides color schemes for maps (and other graphics) designed by Cynthia Brewer.
+
 ## 2.2 Data Introduction
 
 In the code chunk below, fromJSON() of jsonlite package is used to import MC3.json into R environment.
@@ -55,7 +65,7 @@ mc3_data <- fromJSON("data/MC3.json")
 
 ```
 
-The output is called mc3_data. It is a large list R object.
+The output is called mc3_data. It is a large list R object.The knowledge graph (KG) encompasses a vast network comprising 27,622 nodes and 24,038 edges, forming 7,794 interconnected components. Notably, this KG is an undirected multi-graph, and at the top-level, the graph is represented as a dictionary with graph-level properties.
 
 **Node Attributes:**
 
@@ -83,7 +93,7 @@ The output is called mc3_data. It is a large list R object.
 
 `dataset` -- Always "MC3".
 
-role - The subset of the "type" node, not in every edge attribute.
+`role` - The subset of the "type" node, not in every edge attribute.
 
 ## 2.3 Initial Data Exploration
 
@@ -116,7 +126,7 @@ mc3_edges <- as_tibble(mc3_data$links) %>%
 
 `group_by()` and `summarise()` are used to count the number of unique links.
 
-the`filter(source!=target)`is to ensure that no record with similar source and target.
+the`filter(source!=target)`is to ensure that no record with same source and target.
 :::
 
 ```{r}
@@ -153,18 +163,13 @@ DT::datatable(mc3_nodes)
 
 ```
 
+Based on the table provided, it is apparent that certain observations have product services that are unrelated to the fishing industry. For example, Jones LLC(id) offers product services related to automobiles rather than fishing.
+
 ### 2.3.2 Text Sensing with tidytext
 
 From section 2.3.1, a notable observation was made regarding the presence of numerous nodes whose product_service is unrelated to the fishing industry. To ensure the effectiveness of subsequent analyses, it is imperative to filter out these irrelevant nodes. Thus, we will employ text sensing techniques and utilize the tidytext package to analyze the keywords present in the product_service attribute of the nodes.
 
-The code chunk below calculates number of times the word fish appeared in the field product_services.
-
-```{r}
-mc3_nodes %>% 
-    mutate(n_fish = str_count(product_services, "fish")) 
-```
-
-The word tokenisation have different meaning in different scientific domains. In text sensing, tokenisation is the process of breaking up a given text into units called tokens. Tokens can be individual words, phrases or even whole sentences. In the process of tokenisation, some characters like punctuation marks may be discarded. The tokens usually become the input for the processes like parsing and text mining.
+In this section, tokenisation will be used in the process of breaking up a given text into units called tokens. Tokens can be individual words, phrases or even whole sentences. In the process of tokenisation, some characters like punctuation marks may be discarded. The tokens usually become the input for the processes like parsing and text mining.
 
 In the code chunk below, unnest_token() of tidytext is used to split text in product_services field into words.
 
@@ -195,7 +200,7 @@ stopwords_removed <- token_nodes %>%
   anti_join(updated_stop_words)
 ```
 
-::: callout_note
+::: callout-note
 Create new stop words and update the stop_words by 'bind_rows'
 
 Then 'anti_join()' of dplyr package is used to remove all stop words from the analysis.
@@ -218,7 +223,7 @@ stopwords_removed %>%
 
 ```
 
-::: callout_note
+::: callout-note
 'count()' counts the frequency of each unique word in the 'word' column, sorting the result in descending order.
 
 'top_n(15)' selects the top 15 words with the highest frequency.
@@ -228,17 +233,17 @@ stopwords_removed %>%
 'coord_flip()' flips the coordinates, resulting in a horizontal bar plot.
 :::
 
-Based on the above bar chart, it is evident that two specific keywords, namely "fish" and "seafood," exhibit relatively higher percentages compared to other words. Consequently, we will employ these two key words as filters to select nodes and edges for further analysis in subsequent steps.
+Based on the above bar chart, it is evident that three fishing related specific keywords, namely "fish","seafood","salmon" exhibit relatively higher percentages compared to other words. Consequently, we will employ these two key words as filters to select nodes and edges for further analysis in subsequent steps.
 
 ## 2.4 Data Wrangling
 
 ### 2.4.1 Data Preparation_Fishing Edege & Nodes Filter
 
-In this section, we will create an analysis subset of nodes and edges specifically related to the terms "fish" or "seafood."
+In this section, we will create an analysis subset of nodes and edges specifically related to the terms "fish" ,"seafood","salmon".
 
 It is important to note that during our investigation, we discovered that only the "source" nodes in the mc3_edges dataset could be found in the mc3_nodes dataset. Therefore, when filtering for fishing-related edges, we will focus on the "source" node's product_service attribute, specifically checking if it contains the keywords of interest. This filtered subset of edges will be referred to as mc3_edges_fishing.
 
-Regarding the extraction of nodes, we will utilize the mc3_edges_fishing dataset. From this dataset, we will extract both the "source" and "target" node IDs. For the "source" nodes, we will apply a filter based on whether their product_service attribute contains the specified keywords. As for the "target" nodes, they will inherit the type attribute from the mc3_edges_fishing dataset.
+Regarding the extraction of nodes, we will utilize the mc3_edges_fishing dataset. From this dataset, we will extract both the "source" and "target" node IDs. For the "source" nodes, we will apply a filter based on whether their product_service attribute contains the specified keywords. As for the "target" nodes, they will inherit the `type` attribute from the mc3_edges_fishing dataset.
 
 By following this approach, we will establish a refined analysis dataset consisting of relevant nodes and edges, enabling further examination of the fishing domain.
 
@@ -275,8 +280,6 @@ mc3_nodes_target <- bind_rows(empty_df, mc3_nodes_target)
 # Merge mc3_nodes_source and mc3_nodes_target
 mc3_nodes_fishing <- bind_rows(mc3_nodes_source, mc3_nodes_target)
 
-
-library(dplyr)
 # Aggregated MC3_ Nodes_ Fishing1
 mc3_nodes_fishing <- mc3_nodes_fishing %>%
   group_by(id, country, type)%>%
@@ -285,7 +288,7 @@ mc3_nodes_fishing <- mc3_nodes_fishing %>%
 
 ```
 
-::: callout_note
+::: callout-note
 `grep("pattern", x, ignore.case = TRUE)` searches for the specified "pattern" in the vector or character string "x" and returns the matching elements.
 
 `unique()` returns the unique elements of the vector "x" by removing any duplicates.
@@ -305,6 +308,8 @@ mc3_graph_fishing <- tbl_graph(nodes = mc3_nodes_fishing,
                        directed = FALSE) %>%
   mutate(betweenness_centrality = centrality_betweenness(),
          closeness_centrality = centrality_closeness())
+
+
 ```
 
 Degree centrality is a measure that quantifies the number of edges connected to a specific node in a network. It serves as an indicator of the node's influence or centrality within the network, as nodes with a higher degree centrality exhibit a larger number of connections. In the context of the mc3_graph_fishing network, the degree centrality represents the number of companies or people that are connected to a particular node.
@@ -319,11 +324,16 @@ node_degrees <- degree(mc3_graph_fishing)
 mc3_nodes_fishing <- mc3_nodes_fishing %>%
   mutate(degree = node_degrees)
 
+# Plot Bar chart
+ggplot(mc3_nodes_fishing, aes(x = degree)) +
+  geom_bar(fill = "#808de8", color = "black") +
+  labs(title = "Bar Chart of Degree Centrality",
+       x = "Degree Centrality",
+       y = "Frequency")
+
 ```
 
-Closeness centrality is a measure that quantifies how close a node is to all other nodes in a network. Nodes with a higher closeness centrality are considered more central because they can reach a larger number of nodes in the network more quickly.
-
-In the context of the mc3_graph_fishing network, we compute the closeness centrality for each node. This involves determining the average shortest path length from a given node to all other nodes in the network. Nodes with shorter average shortest path lengths will exhibit higher closeness centrality scores.
+Closeness centrality is a measure that quantifies how close a node is to all other nodes in a network.In the context of the mc3_graph_fishing network, we compute the closeness centrality for each node. This involves determining the average shortest path length from a given node to all other nodes in the network. Nodes with shorter average shortest path lengths will exhibit higher closeness centrality scores.
 
 The computed closeness centrality values are then stored as a variable within the mc3_nodes_fishing dataset.
 
@@ -336,9 +346,24 @@ closeness_values <- mc3_graph_fishing %>%
 mc3_nodes_fishing <- mc3_nodes_fishing %>%
   mutate(closeness_centrality = closeness_values)
 
+# Plot histogram
+ggplot(mc3_nodes_fishing, aes(x = closeness_centrality)) +
+  geom_histogram(binwidth = 0.02, fill = "#808de8", color = "black") +
+  labs(title = "Histogram of Closeness Centrality",
+       x = "Closeness Centrality",
+       y = "Frequency")
+
 ```
 
 ### 2.4.3 Data Preparation_Connection Object Count
+
+Given that the network consists of three types of nodes: "Company," "Company Contact," and "Beneficial Owner," we can calculate the following counts for each node:
+
+• The number of "Company" nodes connected to it.
+
+• The number of "Company Contact" nodes connected to it.
+
+• The number of "Beneficial Owner" nodes connected to it.
 
 ```{r}
 
@@ -364,7 +389,7 @@ mc3_nodes_fishing$owner_qty <- owner_qty
 
 ```
 
-::: callout_note
+::: callout-note
 `vector()` Creates an empty vector with a specified length or type.
 
 `V()` is a function used to access the nodes (vertices) of a graph. In this code, V(mc3_graph_fishing) retrieves all the nodes in the mc3_graph_fishing graph.
@@ -372,33 +397,44 @@ mc3_nodes_fishing$owner_qty <- owner_qty
 `sum()` Calculates the sum of values.
 :::
 
-Given that the network consists of three types of nodes: "Company," "Company Contact," and "Beneficial Owner," we can calculate the following counts for each node:
-
-• The number of "Company" nodes connected to it. • The number of "Company Contact" nodes connected to it. • The number of "Beneficial Owner" nodes connected to it.
-
 To facilitate this analysis, we create three new variables: "company_qty," "contacts_qty," and "owner_qty" to store the respective counts of connected nodes for each node in the network. These variables will provide valuable insights into the connectivity patterns between different types of nodes and enable further examination of the network's structure and relationships.
 
 ```{r}
-library(ggplot2)
-library(gridExtra)
 
-# 创建每个图形
-plot1 <- ggplot(data = mc3_nodes_fishing, aes(x = company_qty)) + geom_bar()
-plot2 <- ggplot(data = mc3_nodes_fishing, aes(x = contacts_qty)) + geom_bar()
-plot3 <- ggplot(data = mc3_nodes_fishing, aes(x = owner_qty)) + geom_bar()
+# Create each plot
+plot1 <- ggplot(data = mc3_nodes_fishing, aes(x = company_qty)) + geom_bar(fill="#808de8",color = "black")+
+  ggtitle("Number of Companies Connected to Each Node")+
+  theme(plot.title = element_text(size = 7))
 
-# 合并图形
-combined_plot <- grid.arrange(plot1, plot2, plot3, nrow = 3)
+plot2 <- ggplot(data = mc3_nodes_fishing, aes(x = contacts_qty)) + geom_bar(fill="#808de8", color = "black")+
+  ggtitle("Number of Company Contacts Connected to Each Node")+
+  theme(plot.title = element_text(size = 7))
 
-# 显示合并的图形
+plot3 <- ggplot(data = mc3_nodes_fishing, aes(x = owner_qty)) + geom_bar(fill="#808de8", color = "black")+
+  ggtitle("Number of Beneficial Owners Connected to Each Node")+
+  theme(plot.title = element_text(size = 10))
+
+# Combine the plots with modified layout
+combined_plot <- grid.arrange(
+  arrangeGrob(plot1, plot2, ncol = 2),
+  plot3,
+  heights = c(2, 1)
+)
+
+# Print the plot
 print(combined_plot)
-
 
 ```
 
 # 3. Data Visualisation
 
+In this section, we will generate the network representation of nodes and edges related to the fishing industry. Subsequently, we will conduct an analysis of the network, with a specific focus on highlighting the anomalies within the network.
+
 ## 3.1 Overall Network for All Fishing Related Nodes
+
+Given that we have previously extracted the nodes and edges related to the fishing industry in section 2.4, we can now proceed to visualize the network.
+
+However, since our primary focus is on identifying potential connections related to illegal fishing, we will exclude nodes and edges that exhibit a one-to-one pattern. These one-to-one patterns typically represent safe connections. To achieve this, we will apply a filter condition using ( degree == 1 & closeness_centrality == 1) to exclude such nodes and edges from our analysis.
 
 ```{r}
 # Create the network object mc3_graph_fishing
@@ -424,43 +460,100 @@ mc3_graph_fishing %>%
 
 ```
 
-## 3.2 Netork for Nodes with More Company Connection
+::: callout-note
+`ggraph(layout = "fr")` initiates the ggraph plotting system from the ggraph package with the Fruchterman-Reingold layout specified by layout = "fr".
+
+`scale_size_continuous(range = c(1, 10))` adjusts the size range of the nodes using the scale_size_continuous() function. It specifies that the node sizes should range from 1 to 10.
+:::
+
+## 3.2 Network for Anomalies Nodes
+
+Based on the findings from section 2.4.3, which examined the count of connection objects in the data, we observed that the majority of nodes in the network were associated with either zero or one company connection. A smaller number of nodes were connected to two companies, and only a very limited number of nodes were connected to three companies.
+
+Therefore, we can infer that nodes, especially the "beneficial_owner_nodes" connected to three companies have a higher potential to be classified as anomalies within the network.
 
 ```{r}
 
-mc3_graph_fishing <- tbl_graph(nodes = mc3_nodes_fishing,
-                               edges = mc3_edges_fishing,
-                               directed = FALSE) %>%
-  mutate(degree = centrality_degree(),
-         closeness_centrality = centrality_closeness())
-mc3_graph_fishing %>%
-  filter(!(degree == 1 & closeness_centrality == 1)) %>%
-  activate(edges) %>%
-  filter(type == "Beneficial Owner") %>%
-  ggraph(layout = "fr") +
-  geom_edge_link(aes(alpha = 0.5)) +
-  geom_node_point(aes(
-    size = degree,
-    color = type,
-    alpha = 0.5)) +
-  scale_size_continuous(range = c(1, 10)) +
-  theme_graph()
+# Filter nodes with type "Beneficial Owner"
+beneficial_owner_nodes <- mc3_nodes_fishing[mc3_nodes_fishing$type == "Beneficial Owner", ]
+
+# Create bar chart for "company_qty"
+plot <- ggplot(beneficial_owner_nodes, aes(x = company_qty)) +
+  geom_bar(fill = "#808de8", color = "black") +
+  ggtitle("Company Quantity for Beneficial Owner Nodes")
+
+# Print the plot
+print(plot)
+
 
 ```
 
-## 3.3 Network for Anomalous Node
+By referring to the data table for mc3_nodes_fishing, it becomes evident that there is only one node, identified as "James Brown," that exhibits connections with three different companies. This unique characteristic of James Brown's node suggests a higher likelihood of it being an anomaly within the network.
 
 ```{r}
 library(DT)
 
 # Assuming mc3_edges is your datatable object
 datatable(mc3_nodes_fishing, options = list(scrollY = "500px"))
+
 ```
+
+::: panel-tabset
+## visNetwork
+
+```{r}
+
+
+# Create a new column 'Index' with row numbers
+mc3_nodes_fishing$Index <- seq_len(nrow(mc3_nodes_fishing))
+
+# Select the nodes based on the given indices
+selected_indices <- c(697, 73, 670, 426, 1623, 322, 58, 977, 327, 797, 302, 657, 727, 641, 918, 1230, 1712, 627, 217, 814, 73, 1798, 1366, 61, 897, 1217, 222)
+selected_nodes <- mc3_nodes_fishing[mc3_nodes_fishing$Index %in% selected_indices, ]
+selected_id <- selected_nodes$id
+
+# Find the edges where both source and target nodes are from selected nodes' IDs
+selected_edges <- mc3_edges_fishing[mc3_edges_fishing$source %in% selected_id & mc3_edges_fishing$target %in% selected_id, ]
+colnames(selected_edges)[1:2] <- c("from", "to")
+
+# Assuming 'selected_nodes' and 'selected_edges' are your existing data frames
+
+# Add a new column 'size' based on the 'degree' column, scaled by a factor
+selected_nodes$size <- selected_nodes$closeness_centrality * 1000
+
+# Create a color palette based on the unique values in the 'type' column
+palette <- brewer.pal(n = length(unique(selected_nodes$type)), name = "Set3")
+
+# Assign colors based on the 'type' column
+selected_nodes$color <- palette[as.factor(selected_nodes$type)]
+
+
+# Create the visNetwork plot
+g <- visNetwork(nodes = selected_nodes, edges = selected_edges, height = "500px", width = "100%") %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visNodes(color = ~color, size = ~size) %>%
+  visEdges(color = list(highlight = "lightgray")) %>%
+  visOptions(selectedBy = 'type',
+             highlightNearest = list(enabled = TRUE,
+                                     degree = 1,
+                                     hover = TRUE,
+                                     labelOnly = TRUE),
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visLayout(randomSeed = 123)
+
+g
+
+
+```
+
+## igraph
 
 ```{r}
 # Convert the network object to igraph object
 g <- as.igraph(mc3_graph_fishing)
-vcount(g)
+
 # IMPORTANT ! set vertex names otherwise when you split in sub-graphs you won't be able to recognize them
 g <- set.vertex.attribute(g,'name',index=V(g),as.character(1:vcount(g)))
 
@@ -475,33 +568,21 @@ merged <- do.call(graph.union,sub.graphs[sub.graph.indexes])
 
 plot(merged)
 ```
+:::
 
-```{r}
-# Calculate degree centrality
-degree_centrality <- V(g)$closeness_centrality 
-
-# Get node types
-node_types <- V(g)$type
-
-# Set node attributes for size and color
-V(g)$size <- degree_centrality*1000   # Adjust the multiplication factor as needed
-V(g)$color <- ifelse(node_types == "Beneficial Owner", "red", "blue")
-
-# Decompose the graph
-sub.graphs <- decompose.graph(g)
-
-# Search for the sub-graph indexes containing node '697'
-sub.graph.indexes <- which(sapply(sub.graphs, function(g) any(V(g)$name %in% c('697'))))
-
-# Merge the desired subgraphs
-merged <- do.call(graph.union, sub.graphs[sub.graph.indexes])
-
-# Plot the merged graph
-plot(merged)
-
-
-```
+Upon observing the aforementioned visualization, it becomes apparent that the "James Brown" node exhibits a distinct pattern within the network. Specifically, it is connected to three separate company nodes, which stands out as a highly unique and notable characteristic within the overall network connections.
 
 # 4. Future Work
 
+1.  In section 3.2, "Network for Anomalies Nodes," we utilized igraph to extract the network associated with the node "James Brown." However, we encountered a limitation where the id labels couldn't be displayed next to the nodes. Consequently, we resorted to manually inputting the node's id in the network to create new nodes and edges for generating the visNetwork plot. In future research, it is advisable to focus on either automating the creation of new nodes and edges or utilizing igraph to draw the network while incorporating id labels next to each node.
+
+2.  Regarding the anomalies nodes identified in the preceding sections, it is imperative to gather additional evidence to substantiate the involvement of anomalous companies in illegal fishing activities.
+
+3.  A visual analytics process should be developed to identify similar businesses and measure the similarity among the grouped businesses from the previous question. This entails leveraging visual analytics techniques and tools to explore and analyze the shared characteristics, patterns, or behaviors among the businesses in the identified groups.
+
 # 5. Reference
+
+1.  Kam Tin Seong,Take-home Exercise 3: Kick-starter,2023([link](https://isss608-ay2022-23apr.netlify.app/take-home_ex/th_ex03/mc3-kick-starter))
+2.  Katherine Ognyanova,Network Analysis and Visualization with R and igraph,NetSciX 2016 School of Code Workshop,2016([link](https://kateto.net/netscix2016.html))
+3.  Fatima Rubio,When is the Closeness Centrality Algorithm best applied,Graphable,2023([link](https://www.graphable.ai/blog/closeness-centrality-algorithm/))
+4.  Alex Derr,Network Centrality: Understanding Degree, Closeness & Betweenness Centrality,VisibleNetworkLabs,2021([link](https://visiblenetworklabs.com/2021/04/16/understanding-network-centrality/))
